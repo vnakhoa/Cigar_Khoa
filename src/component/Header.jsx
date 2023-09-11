@@ -1,26 +1,41 @@
 
 import React, { useEffect, useState } from 'react';
 
-import logoCigar from "../assets/img/logo/logo.png"
+import logoCigar from "../assets/img/logo/logo.png";
+import img100x71 from "../assets/img/cart/cart1.jpg";
+
 import { NavLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { back } from '../redux/slice/backHome';
 
 
 function Header() {
     const [cartMain, setCartMain] = useState(false);
     const [cartCategori, setCartCategori] = useState(false);
-    const [active, setActive] = useState('HOME');
+    const [menu, setMenu] = useState(false)
+    // const [active, setActive] = useState('HOME');
 
-    useEffect(() => {
-        console.log(window.location.pathname, 'pảh')
-        if(window.location.pathname != '/')
-            setActive(window.location.pathname.slice(1).toUpperCase());
-    }, []);
+    const activeRedux = useSelector(state => state.backHome);
+    const dispatch = useDispatch();
 
-    function handleActive(e) {
-        let act = e.target.innerText;
-        console.log(act, 'act');
+    console.log(activeRedux, 'activeRedux')
 
-        setActive(String(act));
+    // useEffect(() => {
+    //     setActive(activeRedux)
+    // }, [activeRedux])
+
+    function MenuResponsive() {
+        return (
+            <nav className="mean-nav" onClick={() => setMenu(pre => !pre)}>
+                <ul>
+                    <li onClick={() => dispatch(back('HOME'))} className={activeRedux == "HOME" ? "active" : ''} ><NavLink to={'/home'}>Home</NavLink></li>
+                    <li onClick={() => dispatch(back('SHOP'))} className={activeRedux == "SHOP" ? "active" : ''} ><NavLink to={'/shop'}>Shop</NavLink></li>
+                    <li onClick={() => dispatch(back('BLOG'))} className={activeRedux == "BLOG" ? "active" : ''} ><NavLink>Blog</NavLink></li>
+                    <li onClick={() => dispatch(back('PAGE'))} className={activeRedux == "PAGE" ? "active" : ''} ><NavLink>Page</NavLink></li>
+                    <li onClick={() => dispatch(back('CONTACT US'))} className={activeRedux == "CONTACT US" ? "active" : ''} ><NavLink>Contact Us</NavLink></li>
+                </ul>
+            </nav>
+        )
     }
 
     function CartItem() {
@@ -30,11 +45,11 @@ function Header() {
                     <span>2 Items in Cart</span>
                 </div>
                 <div className="cart_button checkout">
-                    <a href="checkout.html">Proceed to Checkout</a>
+                    <NavLink to={'/cart'} onClick={() => setCartMain(false)}> Proceed to Checkout</NavLink>
                 </div>
                 <div className="cart_item">
                     <div className="cart_img">
-                        <a href="#"><img src="assets/img/cart/cart1.jpg" alt="" /></a>
+                        <a href="#"><img src={img100x71} alt="" /></a>
                     </div>
                     <div className="cart_info">
                         <a href="#">Mr.Coffee 12-Cup</a>
@@ -44,20 +59,9 @@ function Header() {
                         </form>
                     </div>
                 </div>
-                <div className="cart_item">
-                    <div className="cart_img">
-                        <a href="#"><img src="assets/img/cart/cart2.jpg" alt="" /></a>
-                    </div>
-                    <div className="cart_info">
-                        <a href="#">Lid Cover Cookware</a>
-                        <form action="#">
-                            <input min="0" max="100" type="number" />
-                            <span>$160.00</span>
-                        </form>
-                    </div>
-                </div>
+
                 <div className="cart_button view_cart">
-                    <a href="#">View and Edit Cart</a>
+                    <NavLink to={'/cart'} onClick={() => setCartMain(false)}> View and Edit Cart</NavLink>
                 </div>
             </div>
         )
@@ -149,7 +153,7 @@ function Header() {
                 </div>
             </div>
 
-            <div className="header_bottom sticky-header">
+            <div className="header_bottom">
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-3 col-md-5">
@@ -157,22 +161,25 @@ function Header() {
                                 <div className="categories_title" onClick={() => setCartCategori(pre => !pre)}>
                                     <h2 className="categori_toggle"> All categories</h2>
                                 </div>
-                               {cartCategori ? <CartCategori /> : <></>}
-
+                                {cartCategori ? <CartCategori /> : <></>}
                             </div>
                         </div>
-
-                      
                         <div className="col-lg-7 position-relative">
                             <div className="main_menu_inner">
-                                <div className="main_menu  d-lg-block">
+                                <div className="main_menu d-none d-lg-block">
                                     <ul>
-                                        <li onClick={handleActive} className={active == "HOME" ? "active" : ''} ><NavLink to={'/'}>Home</NavLink></li>
-                                        <li onClick={handleActive} className={active == "SHOP" ? "active" : ''} ><NavLink to={'/shop'}>Shop</NavLink></li>
-                                        <li onClick={handleActive} className={active == "BLOG" ? "active" : ''} ><NavLink>Blog</NavLink></li>
-                                        <li onClick={handleActive} className={active == "PAGE" ? "active" : ''} ><NavLink>Page</NavLink></li>
-                                        <li onClick={handleActive} className={active == "CONTACT US" ? "active" : ''} ><NavLink>Contact Us</NavLink></li>
+                                        <li onClick={() => dispatch(back('HOME'))} className={activeRedux == "HOME" ? "active" : ''} ><NavLink to={'/home'}>Home</NavLink></li>
+                                        <li onClick={() => dispatch(back('SHOP'))} className={activeRedux == "SHOP" ? "active" : ''} ><NavLink to={'/shop'}>Shop</NavLink></li>
+                                        <li onClick={() => dispatch(back('BLOG'))} className={activeRedux == "BLOG" ? "active" : ''} ><NavLink>Blog</NavLink></li>
+                                        <li onClick={() => dispatch(back('PAGE'))} className={activeRedux == "PAGE" ? "active" : ''} ><NavLink>Page</NavLink></li>
+                                        <li onClick={() => dispatch(back('CONTACT US'))} className={activeRedux == "CONTACT US" ? "active" : ''} ><NavLink>Contact Us</NavLink></li>
                                     </ul>
+                                </div>
+                                <div className="mobile-menu d-lg-none mean-container">
+                                    <div className="mean-bar">
+                                        <a className="meanmenu-reveal" onClick={() => setMenu(pre => !pre)}><span></span><span></span><span></span></a>
+                                        {menu ? <MenuResponsive /> : <></>}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -191,6 +198,8 @@ function Header() {
                 </div>
             </div>
         </header>
+
+
     )
 }
 

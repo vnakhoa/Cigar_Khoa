@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-import "./assets/css/bootstrap.min.css";
-import "./assets/css/bundle.css";
-import "./assets/css/plugins.css";
-import "./assets/css/style.css";
-import "./assets/css/edit.css"
-import "./assets/css/responsive.css";
+import "./assets/css/app.css";
+
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.Fragment>
+    <Provider store={store}>
       <App />
+    </Provider>
   </React.Fragment>
 );
 

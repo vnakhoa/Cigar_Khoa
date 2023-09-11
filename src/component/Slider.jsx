@@ -6,13 +6,10 @@ import React, { useState } from 'react';
 function Slider() {
     const [currentSlider, setCurrentSlider] = useState(true);
 
-    function handlePrev() {
+    function handleChange() {
         setCurrentSlider(pre => !pre);
     }
 
-    function handleNext() {
-        setCurrentSlider(pre => !pre);
-    }
 
     return (
         <div className="slider_area owl-carousel d-block" >
@@ -48,17 +45,16 @@ function Slider() {
                     </div>
                 </div>
             }
-
-
+            
 
             <div className="owl-nav">
-                <div className="owl-prev" onClick={() => handlePrev()}><i className="fa fa-angle-left"></i></div>
-                <div className="owl-next" onClick={() => handleNext()}><i className="fa fa-angle-right"></i></div>
+                <div className="owl-prev" onClick={() => handleChange()}><i className="fa fa-angle-left"></i></div>
+                <div className="owl-next" onClick={() => handleChange()}><i className="fa fa-angle-right"></i></div>
             </div>
 
             <div className="owl-dots">
-                <div className={currentSlider ? "owl-dot active" : "owl-dot"}><span></span></div>
-                <div className={!currentSlider ? "owl-dot active" : "owl-dot"}><span></span></div>
+                <div className={currentSlider ? "owl-dot active" : "owl-dot"} onClick={() => handleChange()}><span></span></div>
+                <div className={!currentSlider ? "owl-dot active" : "owl-dot"} onClick={() => handleChange()}><span></span></div>
             </div>
         </div>
 

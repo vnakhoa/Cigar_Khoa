@@ -840,6 +840,9 @@ a{
     border: 2px solid #2971f5;
     border-radius: 3px 3px;
 }
+.slider_area{
+	position: relative;
+}
 .slider_content a:hover,.slider_area.owl-carousel .owl-nav div:hover{
     background: #2971f5;
     color: #fff;
@@ -921,9 +924,11 @@ a{
 }
 .slider_area.owl-carousel .owl-dots {
 	position: absolute;
+	top: 95%;
 	bottom: 20px;
 	width: 100%;
 	text-align: center;
+	cursor: pointer;
 }
 .slider_area.owl-carousel .owl-dots .owl-dot.active {
 	width: 40px;
@@ -3827,15 +3832,25 @@ a{
 	padding: 10px;
 	text-align: center;
 }
-.table_desc table thead tr th.product_remove, .table_desc table thead tr th.product-price, .table_desc table thead tr th.product_total {
-    min-width: 159px;
+.table_desc table thead tr th.product-price, .table_desc table thead tr th.product_total {
+    min-width: 209px;
 }
 .table_desc table thead tr th.product_name {
     min-width: 300px;
 }
-.table_desc table thead tr th.product_thumb, .table_desc table thead tr th.product_quantity {
-	min-width: 195px;
+.table_desc table thead tr th.product_thumb {
+	min-width: 212px;
 }
+
+.table_desc table thead tr th.product_quantity{
+	min-width: 85px;
+}
+
+.table_desc table thead tr th.product_remove{
+	min-width: 85px;
+}
+
+
 .cart_page table thead tr:last-child th,.table_desc table tbody tr td:last-child{
     border-right: 0;
 }
