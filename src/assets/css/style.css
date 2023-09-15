@@ -3836,14 +3836,14 @@ a{
     min-width: 209px;
 }
 .table_desc table thead tr th.product_name {
-    min-width: 300px;
+    min-width: 265px;
 }
 .table_desc table thead tr th.product_thumb {
 	min-width: 212px;
 }
 
 .table_desc table thead tr th.product_quantity{
-	min-width: 85px;
+	min-width: 120px;
 }
 
 .table_desc table thead tr th.product_remove{

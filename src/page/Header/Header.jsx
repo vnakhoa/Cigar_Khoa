@@ -1,38 +1,69 @@
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
-import logoCigar from "../assets/img/logo/logo.png";
-import img100x71 from "../assets/img/cart/cart1.jpg";
+import logoCigar from "../../assets/img/logo/logo.png";
+import img100x71 from "../../assets/img/cart/cart1.jpg";
 
 import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { back } from '../redux/slice/backHome';
+import { back } from '../../redux/slice/backHome';
+
+const menuName = [
+    {
+        id: 1,
+        name: 'Home',
+        linkName: '/home',
+    },
+    {
+        id: 2,
+        name: 'Shop',
+        linkName: '/shop',
+    },
+    {
+        id: 3,
+        name: 'Blog',
+        linkName: '/blog',
+    },
+    {
+        id: 4,
+        name: 'Page',
+        linkName: '/page',
+    },
+    {
+        id: 5,
+        name: 'Contact Us',
+        linkName: '/contact',
+    },
+]
 
 
-function Header() {
+function Header(props) {
     const [cartMain, setCartMain] = useState(false);
     const [cartCategori, setCartCategori] = useState(false);
     const [menu, setMenu] = useState(false)
     // const [active, setActive] = useState('HOME');
+
+    const select = useSelector(state => state.cart_Products);
+    console.log(select, 'select')
 
     const activeRedux = useSelector(state => state.backHome);
     const dispatch = useDispatch();
 
     console.log(activeRedux, 'activeRedux')
 
-    // useEffect(() => {
-    //     setActive(activeRedux)
-    // }, [activeRedux])
-
     function MenuResponsive() {
         return (
             <nav className="mean-nav" onClick={() => setMenu(pre => !pre)}>
                 <ul>
-                    <li onClick={() => dispatch(back('HOME'))} className={activeRedux == "HOME" ? "active" : ''} ><NavLink to={'/home'}>Home</NavLink></li>
-                    <li onClick={() => dispatch(back('SHOP'))} className={activeRedux == "SHOP" ? "active" : ''} ><NavLink to={'/shop'}>Shop</NavLink></li>
-                    <li onClick={() => dispatch(back('BLOG'))} className={activeRedux == "BLOG" ? "active" : ''} ><NavLink>Blog</NavLink></li>
-                    <li onClick={() => dispatch(back('PAGE'))} className={activeRedux == "PAGE" ? "active" : ''} ><NavLink>Page</NavLink></li>
-                    <li onClick={() => dispatch(back('CONTACT US'))} className={activeRedux == "CONTACT US" ? "active" : ''} ><NavLink>Contact Us</NavLink></li>
+                    {
+                        menuName.map((item) => {
+                            return (
+                                <li key={item.id} onClick={() => dispatch(back(item.name))} className={activeRedux == item.name.toUpperCase() ? "active" : ''} >
+                                    <NavLink to={item.linkName}>{item.name}</NavLink>
+                                </li>
+                            )
+                        })
+                    }
                 </ul>
             </nav>
         )
@@ -42,23 +73,27 @@ function Header() {
         return (
             <div className="mini_cart d-block">
                 <div className="items_nunber">
-                    <span>2 Items in Cart</span>
+                    <span>{select.length} Items in Cart</span>
                 </div>
                 <div className="cart_button checkout">
                     <NavLink to={'/cart'} onClick={() => setCartMain(false)}> Proceed to Checkout</NavLink>
                 </div>
-                <div className="cart_item">
-                    <div className="cart_img">
-                        <a href="#"><img src={img100x71} alt="" /></a>
-                    </div>
-                    <div className="cart_info">
-                        <a href="#">Mr.Coffee 12-Cup</a>
-                        <form action="#">
-                            <input min="0" max="100" type="number" />
-                            <span>$60.00</span>
-                        </form>
-                    </div>
-                </div>
+                {select.map((item) => {
+                    return (
+                        <div className="cart_item" key={item._id}>
+                            <div className="cart_img">
+                                <a><img src={img100x71} alt="" /></a>
+                            </div>
+                            <div className="cart_info">
+                                <a>{item.name}</a>
+                                <form action="#">
+                                    <input value={item.qty} min="0" max="100" type="number" />
+                                    <span>${item.price}</span>
+                                </form>
+                            </div>
+                        </div>
+                    )
+                })}
 
                 <div className="cart_button view_cart">
                     <NavLink to={'/cart'} onClick={() => setCartMain(false)}> View and Edit Cart</NavLink>
@@ -72,43 +107,43 @@ function Header() {
         return (
             <div className="categories_menu_inner d-block">
                 <ul>
-                    <li className="categorie_list"><a href="#">Laptop & Computer <i className="fa fa-angle-right"></i></a>
+                    <li className="categorie_list"><a>Laptop & Computer <i className="fa fa-angle-right"></i></a>
                         <ul className="categories_mega_menu">
-                            <li><a href="#">Headphoness</a></li>
-                            <li><a href="#">Laptop & Computers</a></li>
-                            <li><a href="#">Camera & Photos</a></li>
+                            <li><a>Headphoness</a></li>
+                            <li><a>Laptop & Computers</a></li>
+                            <li><a>Camera & Photos</a></li>
                             <li><img src="assets/img/categorie/categorie.png" alt="" /></li>
                         </ul>
                     </li>
-                    <li><a href="#"> Fashion  <i className="fa fa-angle-right"></i></a>
+                    <li><a> Fashion  <i className="fa fa-angle-right"></i></a>
                         <ul className="categories_mega_menu">
-                            <li><a href="#">Dresses</a></li>
-                            <li><a href="#">Handbags</a></li>
-                            <li><a href="#">shoes</a></li>
-                            <li><a href="#">Clothing</a></li>
+                            <li><a>Dresses</a></li>
+                            <li><a>Handbags</a></li>
+                            <li><a>shoes</a></li>
+                            <li><a>Clothing</a></li>
                         </ul>
                     </li>
-                    <li><a href="#"> Furnitured & Decor <i className="fa fa-angle-right"></i></a>
+                    <li><a> Furnitured & Decor <i className="fa fa-angle-right"></i></a>
                         <ul className="categories_mega_menu column_3">
-                            <li><a href="#">Chair</a></li>
-                            <li><a href="#">Lighting</a></li>
-                            <li><a href="#">Sofa</a></li>
+                            <li><a>Chair</a></li>
+                            <li><a>Lighting</a></li>
+                            <li><a>Sofa</a></li>
                         </ul>
                     </li>
-                    <li><a href="#"> Toys & Hobbies <i className="fa fa-angle-right"></i></a>
+                    <li><a> Toys & Hobbies <i className="fa fa-angle-right"></i></a>
                         <ul className="categories_mega_menu column_2">
-                            <li><a href="#">Boys' Toys</a></li>
-                            <li><a href="#">Girls' Toys</a> </li>
+                            <li><a>Boys' Toys</a></li>
+                            <li><a>Girls' Toys</a> </li>
                         </ul>
                     </li>
-                    <li><a href="#"> Accessories</a></li>
-                    <li><a href="#"> Jewelry & Watches</a></li>
-                    <li><a href="#"> Health & Beauty</a></li>
-                    <li><a href="#">Books & Office</a></li>
-                    <li><a href="#"> Sport & Outdoor</a></li>
-                    <li id="cat_toggle" className="has-sub"><a href="#"> More Categories</a>
+                    <li><a> Accessories</a></li>
+                    <li><a> Jewelry & Watches</a></li>
+                    <li><a> Health & Beauty</a></li>
+                    <li><a>Books & Office</a></li>
+                    <li><a> Sport & Outdoor</a></li>
+                    <li id="cat_toggle" className="has-sub"><a> More Categories</a>
                         <ul className="categorie_sub">
-                            <li><a href="#"> Computer - Laptop</a></li>
+                            <li><a> Computer - Laptop</a></li>
                         </ul>
 
                     </li>
@@ -139,11 +174,11 @@ function Header() {
                         <div className="col-lg-2 col-md-3">
                             <div className="cart_area">
                                 <div className="wishlist_link">
-                                    <a href="#"><i className="ion-ios-heart-outline"></i></a>
+                                    <a><i className="ion-ios-heart-outline"></i></a>
                                 </div>
                                 <div className="cart_link">
                                     <a href="javascript:void(0)" onClick={() => setCartMain(pre => !pre)}><i className="ion-ios-cart-outline"></i>My Cart</a>
-                                    <span className="cart_count">2</span>
+                                    <span className="cart_count">{select.length}</span>
 
                                     {cartMain ? <CartItem /> : <></>}
                                 </div>
@@ -168,11 +203,15 @@ function Header() {
                             <div className="main_menu_inner">
                                 <div className="main_menu d-none d-lg-block">
                                     <ul>
-                                        <li onClick={() => dispatch(back('HOME'))} className={activeRedux == "HOME" ? "active" : ''} ><NavLink to={'/home'}>Home</NavLink></li>
-                                        <li onClick={() => dispatch(back('SHOP'))} className={activeRedux == "SHOP" ? "active" : ''} ><NavLink to={'/shop'}>Shop</NavLink></li>
-                                        <li onClick={() => dispatch(back('BLOG'))} className={activeRedux == "BLOG" ? "active" : ''} ><NavLink>Blog</NavLink></li>
-                                        <li onClick={() => dispatch(back('PAGE'))} className={activeRedux == "PAGE" ? "active" : ''} ><NavLink>Page</NavLink></li>
-                                        <li onClick={() => dispatch(back('CONTACT US'))} className={activeRedux == "CONTACT US" ? "active" : ''} ><NavLink>Contact Us</NavLink></li>
+                                        {
+                                            menuName.map((item) => {
+                                                return (
+                                                    <li key={item.id} onClick={() => dispatch(back(item.name))} className={activeRedux == item.name.toUpperCase() ? "active" : ''} >
+                                                        <NavLink to={item.linkName}>{item.name}</NavLink>
+                                                    </li>
+                                                )
+                                            })
+                                        }
                                     </ul>
                                 </div>
                                 <div className="mobile-menu d-lg-none mean-container">

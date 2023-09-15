@@ -1,14 +1,66 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import img118x118 from "../../assets/img/cart/cart10.jpg"
 import model_img from "../../assets/img/product/bigimg1.jpg"
 import { NavLink } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
-import {back} from "../../redux/slice/backHome"
+import { useDispatch, useSelector } from 'react-redux'
+import { back } from "../../redux/slice/backHome"
+import { addProduct, deleteProduct } from '../../redux/slice/cart_Products'
+import { increaseQuantity, descreaseQuantity } from '../../redux/slice/detail_Product'
+
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
+
+const images = [
+    {
+        id: 1,
+        img: img118x118,
+    },
+    {
+        id: 2,
+        img: img118x118,
+    },
+    {
+        id: 3,
+        img: img118x118,
+    },
+    {
+        id: 4,
+        img: img118x118,
+    },
+]
+
+const URL = [
+    {
+        id: 1,
+        icon: "fa fa-facebook",
+        name: 'Share',
+    },
+    {
+        id: 2,
+        icon: "fa fa-twitter",
+        name: 'Tweet',
+    },
+    {
+        id: 3,
+        icon: "fa fa-google-plus",
+        name: 'Google+',
+    },
+    {
+        id: 4,
+        icon: "fa fa-pinterest",
+        name: 'Pinterest',
+    },
+
+]
 
 function Detail() {
+    const [active, setActive] = useState(1);
     const dispatch = useDispatch();
-    
+    const selectDetail = useSelector(state => state.detail_Product);
+    console.log(selectDetail, 'selectDe')
+
+    console.log('renderrrrrr')
     return (
         <>
             <div className="breadcrumbs_area">
@@ -38,73 +90,75 @@ function Detail() {
                                 <div className="tab-content produc_thumb_conatainer">
                                     <div className="tab-pane fade show active" id="p_tab1" role="tabpanel" >
                                         <div className="modal_img">
-                                            <a href="#"><img src={model_img} alt=""/></a>
+                                            <a><img src={model_img} alt="" /></a>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div className="product_thumb_button">    
+                                <div className="product_thumb_button">
                                     <ul className="nav product_d_button" role="tablist">
-                                        <li >
-                                            <a className="active" data-bs-toggle="tab" href="#p_tab1" role="tab" aria-controls="p_tab1" aria-selected="false"><img src={img118x118} alt=""/></a>
-                                        </li>
-                                        <li>
-                                             <a data-bs-toggle="tab" href="#p_tab2" role="tab" aria-controls="p_tab2" aria-selected="false"><img src={img118x118} alt=""/></a>
-                                        </li>
-                                        <li>
-                                           <a data-bs-toggle="tab" href="#p_tab3" role="tab" aria-controls="p_tab3" aria-selected="false"><img src={img118x118} alt=""/></a>
-                                        </li>
-                                        <li>
-                                           <a data-bs-toggle="tab" href="#p_tab4" role="tab" aria-controls="p_tab4" aria-selected="false"><img src={img118x118} alt=""/></a>
-                                        </li>
+                                        {images.map((item) => {
+                                            return (
+                                                <li key={item.id}>
+                                                    <a className={active == item.id ? "active" : ''} onClick={() => setActive(item.id)} data-bs-toggle="tab" href="#p_tab1" role="tab" aria-controls="p_tab1" aria-selected="false">
+                                                        <img src={item.img} alt="" />
+                                                    </a>
+                                                </li>
+                                            )
+                                        })}
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-7 col-md-6">
                             <div className="product_details">
-                                <h3>Nonstick Dishwasher PFOA</h3>
+                                <h3>{selectDetail.name}</h3>
                                 <div className="product_price">
-                                    <span className="current_price">$23.00</span>
+                                    <span className="current_price">${selectDetail.price}</span>
                                     <span className="old_price">$28.00</span>
                                 </div>
                                 <div className="product_ratting">
                                     <ul>
-                                        <li><a href="#"><i className="ion-star"></i></a></li>
-                                        <li><a href="#"><i className="ion-ios-star-outline"></i></a></li>
-                                        <li><a href="#"><i className="ion-ios-star-outline"></i></a></li>
-                                        <li><a href="#"><i className="ion-ios-star-outline"></i></a></li>
-                                        <li><a href="#"><i className="ion-ios-star-outline"></i></a></li>
+                                        <li><a><i className="ion-star"></i></a></li>
+                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
                                     </ul>
                                     <ul>
-                                        <li><a href="#">1 Review</a></li>
+                                        <li><a>1 Review</a></li>
                                     </ul>
                                 </div>
-                               <div className="product_description">
-                                   <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis laborum, facilis in provident pariatur, assumenda accusantium asperiores iste corrupti laboriosam quasi eius illum minus aperiam doloribus, distinctio unde? Nam recusandae ipsam repellendus repellat eum nisi obcaecati, doloremque mollitia iste, ab delectus, error quia, quae eligendi!</p>
-                               </div>
+                                <div className="product_description">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis laborum, facilis in
+                                        provident pariatur, assumenda accusantium asperiores iste corrupti laboriosam quasi eius illum
+                                        minus aperiam doloribus, distinctio unde? Nam recusandae ipsam repellendus repellat eum
+                                        nisi obcaecati, doloremque mollitia iste, ab delectus, error quia, quae eligendi!
+                                    </p>
+                                </div>
                                 <div className="product_details_action">
                                     <h3>Available Options</h3>
                                     <div className="product_stock">
                                         <label>Quantity</label>
-                                        <input min="1" value="1" max="100" type="number" />
+                                        <RemoveCircleRoundedIcon onClick={() => dispatch(descreaseQuantity(selectDetail))} style={{ cursor: 'pointer' }} />
+                                        <span style={{ fontSize: '20px', background: '#E8EAF6', padding: '4px 7px 7px 7px' }}>{selectDetail.qty}</span>
+                                        <AddCircleRoundedIcon onClick={() => dispatch(increaseQuantity(selectDetail))} style={{ cursor: 'pointer' }} />
                                     </div>
                                     <div className="product_action_link">
                                         <ul>
-                                            <li className="product_cart"><a href="cart.html" title="Add to Cart">Add to Cart</a></li>
-                                            <li className="add_links"><a href="#" title="Add to Wishlist"><i className="ion-ios-heart-outline"></i> Add to wishlist</a></li>
-                                            <li className="add_links"><a href="#" title="Add to Compare"><i className="ion-loop"></i> Add to compare</a></li>
+                                            <li className="product_cart"><NavLink to={'/cart'} onClick={() => dispatch(addProduct(selectDetail))}>Add to Cart</NavLink></li>
+                                            <li className="add_links"><a><i className="ion-ios-heart-outline"></i> Add to wishlist</a></li>
+                                            <li className="add_links"><a><i className="ion-loop"></i> Add to compare</a></li>
                                         </ul>
                                     </div>
                                     <div className="social_sharing">
                                         <span>Share</span>
                                         <ul>
-                                            <li><a href="#" className="bg-facebook" data-bs-toggle="tooltip" title="Facebook"><i className="fa fa-facebook"></i> Share</a></li>
-                                            <li><a href="#" className="bg-Tweet" data-bs-toggle="tooltip" title="twitter"><i className="fa fa-twitter"></i> Tweet</a></li>
-                                            <li><a href="#" className="bg-google" data-bs-toggle="tooltip" title="google-plus"><i className="fa fa-google-plus"></i> Google+</a></li>
-                                            <li><a href="#" className="bg-pinterest" data-bs-toggle="tooltip" title="pinterest"><i className="fa fa-pinterest"></i> Pinterest</a></li>
+                                            {URL.map((item) => {
+                                                return <li key={item.id}><a><i className={item.icon}></i>{item.name}</a></li>
+                                            })}
                                         </ul>
-                                    </div> 
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -23,7 +23,7 @@ function Slider() {
                                 <h3>get up to</h3>
                                 <h2>30% off</h2>
                                 <p>Upgrade every 12 months</p>
-                                <a href="#">shop now</a>
+                                <a>shop now</a>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@ function Slider() {
                                     <h3>get up to</h3>
                                     <h2>30% off</h2>
                                     <p>20.3 Megapixels plus 80 Megapixel</p>
-                                    <a href="#">shop now</a>
+                                    <a>shop now</a>
                                 </div>
                             </div>
                         </div>
