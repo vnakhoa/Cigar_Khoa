@@ -12,7 +12,7 @@ function Breadcrumbs() {
         console.log('kkk', dispatch);
         // e.preventDefault();
 
-        dispatch(back('HOME'));
+        dispatch(back(''));
 
     }
 
@@ -25,7 +25,7 @@ function Breadcrumbs() {
                             <div className="breadcrumb_content">
                                 <h3>shop</h3>
                                 <ul>
-                                    <li><NavLink to={'/home'} onClick={handleBackHome}>Home</NavLink></li>
+                                    <li><NavLink to={'/'} onClick={handleBackHome}>Home</NavLink></li>
                                     <li><i className="fa fa-angle-right"></i></li>
                                     <li>shop</li>
                                 </ul>

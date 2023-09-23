@@ -15,22 +15,22 @@ const chooseSize = [
     {
         id: 1,
         size: 's',
+        nameSize: 'small'
     },
     {
         id: 2,
         size: 'm',
+        nameSize: 'medium'
     },
     {
         id: 3,
         size: 'l',
+        nameSize: 'large'
     },
     {
         id: 4,
         size: 'xl',
-    },
-    {
-        id: 5,
-        size: 'xxl',
+        nameSize: 'x-large'
     },
 ];
 
@@ -77,7 +77,7 @@ function DetailPopUp({setOnPopUp}) {
                                         <div className="tab-content product-details-large">
                                             <div className="tab-pane fade active show" id="tab1" >
                                                 <div className="modal_tab_img">
-                                                    <a ><img src={imgProduct44} alt="" /></a>
+                                                    <a ><img src={selectDetail.image} alt="" /></a>
                                                 </div>
                                             </div>
                                         </div>
@@ -116,7 +116,7 @@ function DetailPopUp({setOnPopUp}) {
                                         </div>
                                         <div className="modal_price mb-10">
                                             <span className="new_price">${selectDetail && selectDetail.price}</span>
-                                            <span className="old_price">$78.99</span>
+                                            <span className="old_price">${selectDetail && selectDetail.price + 20}</span>
                                         </div>
                                         <div className="modal_content mb-10">
                                             <p>Short-sleeved blouse with feminine draped sleeve detail.</p>

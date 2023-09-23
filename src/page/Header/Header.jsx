@@ -1,56 +1,85 @@
-
-import React, { useState } from 'react';
-
+import React, { useEffect, useState } from 'react';
 import logoCigar from "../../assets/img/logo/logo.png";
-import img100x71 from "../../assets/img/cart/cart1.jpg";
 
-import { NavLink } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { back } from '../../redux/slice/backHome';
+import { NavLink } from 'react-router-dom';
+import { menuName } from '../../constant/menuName';
+import { changeCategory } from '../../redux/slice/categorySoft';
+import { getDetailProduct } from '../../redux/slice/detail_Product';
+import { getProduct } from '../../service/api/product';
+import { getSearchProductData } from '../../redux/slice/searchProduct';
+import { useNavigate } from 'react-router-dom';
 
-const menuName = [
+const category = [
+    {
+        id: 0,
+        name: 'All'
+    },
     {
         id: 1,
-        name: 'Home',
-        linkName: '/home',
+        name: 'Clothing & Apparel'
     },
     {
         id: 2,
-        name: 'Shop',
-        linkName: '/shop',
+        name: 'Consumer Electrics'
     },
     {
         id: 3,
-        name: 'Blog',
-        linkName: '/blog',
+        name: 'Phones & Accessories'
     },
     {
         id: 4,
-        name: 'Page',
-        linkName: '/page',
+        name: 'Computers & Technologies'
     },
     {
         id: 5,
-        name: 'Contact Us',
-        linkName: '/contact',
+        name: 'Babies & Moms'
     },
-]
+    {
+        id: 6,
+        name: 'Books & Office'
+    },
+    {
+        id: 7,
+        name: 'Sport & Outdoo'
+    },
+    {
+        id: 8,
+        name: 'Chairs & Stools'
+    },
+    {
+        id: 9,
+        name: 'Furniture & Acessories'
+    },
+    {
+        id: 10,
+        name: 'Kitchen & Tableware'
+    },
+    {
+        id: 11,
+        name: 'Lighting'
+    },
+    {
+        id: 12,
+        name: 'Armchairs & Chaises'
+    },
+];
 
 
 function Header(props) {
+    const [activeCategory, setActiveCategory] = useState('All')
     const [cartMain, setCartMain] = useState(false);
     const [cartCategori, setCartCategori] = useState(false);
     const [menu, setMenu] = useState(false)
-    // const [active, setActive] = useState('HOME');
+    const [keySearch, setKeySearch] = useState('')
+    const [suggest, setSuggest] = useState([])
 
-    const select = useSelector(state => state.cart_Products);
-    console.log(select, 'select')
-
-    const activeRedux = useSelector(state => state.backHome);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const select = useSelector(state => state.cart_Products);
+    // console.log(select, 'select')
 
-    console.log(activeRedux, 'activeRedux')
-
+    //COMPONENT
     function MenuResponsive() {
         return (
             <nav className="mean-nav" onClick={() => setMenu(pre => !pre)}>
@@ -58,8 +87,8 @@ function Header(props) {
                     {
                         menuName.map((item) => {
                             return (
-                                <li key={item.id} onClick={() => dispatch(back(item.name))} className={activeRedux == item.name.toUpperCase() ? "active" : ''} >
-                                    <NavLink to={item.linkName}>{item.name}</NavLink>
+                                <li key={item.id}>
+                                    <NavLink to={item.linkName} onClick={() => setActiveCategory('All')}>{item.name}</NavLink>
                                 </li>
                             )
                         })
@@ -68,7 +97,6 @@ function Header(props) {
             </nav>
         )
     }
-
     function CartItem() {
         return (
             <div className="mini_cart d-block">
@@ -82,7 +110,7 @@ function Header(props) {
                     return (
                         <div className="cart_item" key={item._id}>
                             <div className="cart_img">
-                                <a><img src={img100x71} alt="" /></a>
+                                <NavLink to={`/detail/${item._id}`} onClick={() => { dispatch(getDetailProduct(item)); setCartMain(pre => !pre) }}><img src={item.image} alt="" /></NavLink>
                             </div>
                             <div className="cart_info">
                                 <a>{item.name}</a>
@@ -101,56 +129,71 @@ function Header(props) {
             </div>
         )
     }
-
     function CartCategori() {
 
         return (
             <div className="categories_menu_inner d-block">
                 <ul>
-                    <li className="categorie_list"><a>Laptop & Computer <i className="fa fa-angle-right"></i></a>
-                        <ul className="categories_mega_menu">
-                            <li><a>Headphoness</a></li>
-                            <li><a>Laptop & Computers</a></li>
-                            <li><a>Camera & Photos</a></li>
-                            <li><img src="assets/img/categorie/categorie.png" alt="" /></li>
-                        </ul>
-                    </li>
-                    <li><a> Fashion  <i className="fa fa-angle-right"></i></a>
-                        <ul className="categories_mega_menu">
-                            <li><a>Dresses</a></li>
-                            <li><a>Handbags</a></li>
-                            <li><a>shoes</a></li>
-                            <li><a>Clothing</a></li>
-                        </ul>
-                    </li>
-                    <li><a> Furnitured & Decor <i className="fa fa-angle-right"></i></a>
-                        <ul className="categories_mega_menu column_3">
-                            <li><a>Chair</a></li>
-                            <li><a>Lighting</a></li>
-                            <li><a>Sofa</a></li>
-                        </ul>
-                    </li>
-                    <li><a> Toys & Hobbies <i className="fa fa-angle-right"></i></a>
-                        <ul className="categories_mega_menu column_2">
-                            <li><a>Boys' Toys</a></li>
-                            <li><a>Girls' Toys</a> </li>
-                        </ul>
-                    </li>
-                    <li><a> Accessories</a></li>
-                    <li><a> Jewelry & Watches</a></li>
-                    <li><a> Health & Beauty</a></li>
-                    <li><a>Books & Office</a></li>
-                    <li><a> Sport & Outdoor</a></li>
-                    <li id="cat_toggle" className="has-sub"><a> More Categories</a>
-                        <ul className="categorie_sub">
-                            <li><a> Computer - Laptop</a></li>
-                        </ul>
-
-                    </li>
+                    {
+                        category.map((item) => {
+                            return (
+                                <li className="categorie_list" key={item.id}>
+                                    <a onClick={() => {
+                                        setActiveCategory(item.name);
+                                        setCartCategori(pre => !pre)
+                                        dispatch(getSearchProductData(''));
+                                        dispatch(changeCategory(item.name));
+                                    }
+                                    }
+                                        style={activeCategory == item.name ? { color: '#0062ffd8' } : {}}
+                                    >
+                                        {item.name}
+                                    </a>
+                                </li>
+                            )
+                        })
+                    }
                 </ul>
             </div>
         )
     }
+
+    //SEARCH
+    const handleSearch = () => {
+        console.log(keySearch, 'keySearch')
+
+        dispatch(getSearchProductData(keySearch));
+        navigate(`/shop?name=${keySearch}`)
+        setKeySearch('')
+    }
+    const handleKeySearch = (e) => {
+        console.log(e.target.value)
+        setKeySearch(e.target.value);
+    }
+
+    const getApiSuggest = async () => {
+        console.log(keySearch, keySearch.length, 'hhhh')
+
+        const { data } = await getProduct();
+        console.log(data)
+        const newDataSuggest = await data.filter((item) => {
+            return item.name.toLowerCase().includes(keySearch.toLowerCase());
+        })
+        console.log(newDataSuggest)
+        if (keySearch) {
+            console.log('ttt')
+            setSuggest(newDataSuggest)
+        }
+        else {
+            console.log('dd')
+            setSuggest([])
+        }
+
+    }
+
+    useEffect(() => {
+        getApiSuggest()
+    }, [keySearch])
 
 
     return (
@@ -160,24 +203,48 @@ function Header(props) {
                     <div className="row align-items-center">
                         <div className="col-lg-3 col-md-4">
                             <div className="logo">
-                                <a href="index.html"><img src={logoCigar} alt="" /></a>
+                                <a><img src={logoCigar} alt="" /></a>
                             </div>
                         </div>
                         <div className="col-lg-7 col-md-5">
-                            <div className="search_bar">
-                                <form action="#">
-                                    <input placeholder="Search entire store here..." type="text" />
-                                    <button type="submit"><i className="ion-ios-search-strong"></i></button>
-                                </form>
+                            <div className="search_bar" style={{ position: 'relative' }}>
+                                {/* <form> */}
+                                <input onChange={(e) => { handleKeySearch(e) }} value={keySearch} placeholder="Search entire store here..." type="text" />
+                                <ul style={{ position: 'absolute', width: '100%', zIndex: '5', background: '#f6f3f3', borderRadius: '0 0 2px 2px' }}>
+                                    {
+                                        suggest && suggest.map((item) => {
+                                            return <li
+                                                onClick={() => {
+                                                    setKeySearch(item.name); 
+                                                    dispatch(getSearchProductData(item.name));
+                                                    navigate(`/shop?name=${item.name}`)
+                                                    setKeySearch('')
+                                                }}
+                                                key={item._id}
+                                                className='suggest_search'
+                                                style={{ padding: '3px 3px 3px 3px', borderTop: '1px solid #e6e6e6' }}
+                                            >
+                                                <i className="ion-ios-search-strong mr-2"></i>
+                                                {item.name}
+                                            </li>
+                                        })
+                                    }
+                                </ul>
+                                <button onClick={handleSearch}><i className="ion-ios-search-strong"></i></button>
+                                {/* </form> */}
                             </div>
                         </div>
+
                         <div className="col-lg-2 col-md-3">
                             <div className="cart_area">
                                 <div className="wishlist_link">
-                                    <a><i className="ion-ios-heart-outline"></i></a>
+                                    <NavLink to={'/dashboard'} className='d-flex'>
+                                        <i className="ion-ios-person-outline"></i>
+                                        <p className='set_user d-flex align-items-end setup_edit'>Edit</p>
+                                    </NavLink>
                                 </div>
                                 <div className="cart_link">
-                                    <a href="javascript:void(0)" onClick={() => setCartMain(pre => !pre)}><i className="ion-ios-cart-outline"></i>My Cart</a>
+                                    <a onClick={() => setCartMain(pre => !pre)}><i className="ion-ios-cart-outline"></i>Cart</a>
                                     <span className="cart_count">{select.length}</span>
 
                                     {cartMain ? <CartItem /> : <></>}
@@ -194,7 +261,7 @@ function Header(props) {
                         <div className="col-lg-3 col-md-5">
                             <div className="categories_menu">
                                 <div className="categories_title" onClick={() => setCartCategori(pre => !pre)}>
-                                    <h2 className="categori_toggle"> All categories</h2>
+                                    <h2 className="categori_toggle">{activeCategory == 'All' ? 'All Categories' : activeCategory.slice(0, 12) + '...'}</h2>
                                 </div>
                                 {cartCategori ? <CartCategori /> : <></>}
                             </div>
@@ -206,8 +273,17 @@ function Header(props) {
                                         {
                                             menuName.map((item) => {
                                                 return (
-                                                    <li key={item.id} onClick={() => dispatch(back(item.name))} className={activeRedux == item.name.toUpperCase() ? "active" : ''} >
-                                                        <NavLink to={item.linkName}>{item.name}</NavLink>
+                                                    <li key={item.id} >
+                                                        <NavLink
+                                                            to={item.linkName}
+                                                            onClick={() => {
+                                                                setActiveCategory('All');
+                                                                dispatch(changeCategory('All'))
+                                                            }
+                                                            }
+                                                        >
+                                                            {item.name}
+                                                        </NavLink>
                                                     </li>
                                                 )
                                             })

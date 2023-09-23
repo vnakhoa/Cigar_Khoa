@@ -8,6 +8,7 @@ const cart_Products = createSlice({
     reducers: {
         addProduct: (state, action) => {
             const findItem = state.find((item) => item._id == action.payload._id);
+            console.log(state)
             console.log('findItemADD', findItem)
             if (findItem && Object.keys(findItem).length > 0) {
                 console.log('kkkkkkkkkk')
@@ -36,7 +37,7 @@ const cart_Products = createSlice({
 
         descreaseProduct: (state, action) => {
             const findItem = state.find((item) => item._id == action.payload._id);
-            console.log('findItemDELETE', findItem)
+            console.log('findItemDESCREASE', findItem)
             if (findItem) {
                 if (findItem.qty && findItem.qty > 1) {
                     return state.map((item) => {

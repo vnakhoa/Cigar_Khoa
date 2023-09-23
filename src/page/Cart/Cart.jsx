@@ -14,6 +14,7 @@ function Cart() {
     const select = useSelector(state => state.cart_Products);
     console.log(select, 'select')
     
+    
     let totalCost = 0;
     let totalRate = 0;
     select.forEach((item) => {
@@ -46,7 +47,7 @@ function Cart() {
                                                 return (
                                                     <tr key={item._id}>
                                                         <td className="product_remove"><a><i className="fa fa-trash-o" onClick={() => dispatch(deleteItemProduct(item))}></i></a></td>
-                                                        <td className="product_thumb"><NavLink to={'/detail'} onClick={() => dispatch(getDetailProduct(item))}><img src={img118x118} alt="" /></NavLink></td>
+                                                        <td className="product_thumb"><NavLink to={`/detail/${item._id}`} onClick={() => dispatch(getDetailProduct(item))}><img src={item.image} alt="" /></NavLink></td>
                                                         <td className="product_name"><a>{item.name}</a></td>
                                                         <td className="product-price">£{item.price}</td>
                                                         <td className="product_quantity">

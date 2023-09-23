@@ -1,6 +1,7 @@
 
 
 import React, { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 
 
 function Slider() {
@@ -23,7 +24,7 @@ function Slider() {
                                 <h3>get up to</h3>
                                 <h2>30% off</h2>
                                 <p>Upgrade every 12 months</p>
-                                <a>shop now</a>
+                                <NavLink to={'/shop'}>Shop now</NavLink>
                             </div>
                         </div>
                     </div>
@@ -38,7 +39,7 @@ function Slider() {
                                     <h3>get up to</h3>
                                     <h2>30% off</h2>
                                     <p>20.3 Megapixels plus 80 Megapixel</p>
-                                    <a>shop now</a>
+                                    <NavLink to={'/shop'}>Shop now</NavLink>
                                 </div>
                             </div>
                         </div>

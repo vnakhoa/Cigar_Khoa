@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {};
+let initialState = {};
 
 const detail_Product = createSlice({
     name: 'detail_Product',
     initialState,
     reducers: {
         getDetailProduct: (state, action) =>{
+            console.log(action.payload)
             return action.payload;
         },
 

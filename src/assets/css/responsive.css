@@ -742,16 +742,22 @@
 
 @media (max-width: 767px) {
     .single_categorie_banner{
-        width: 50%;
-    }
+        display: block;
+        width: fit-content;
+        margin: 0 auto;
+    } 
+
+    
     .countdown_product_thumb img{
         width: 60%;
     }
 
-    .product_thumb{
+    .product_thumb {
+        width: -moz-fit-content;
         width: fit-content;
+        min-height: 158px;
     }
-
+    
     .sticky-header.sticky {
         position: inherit;
         -webkit-box-shadow: inherit;
@@ -1142,7 +1148,12 @@
 
     @media (max-width: 667px){
         .single_categorie_banner{
-            width: 100%;
+            display: block;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        .countdown_product_thumb{
+            width: 60%;
         }
     }
     
@@ -1740,8 +1751,6 @@
         justify-content: center;
     }
      
-    
 }
-
 
 

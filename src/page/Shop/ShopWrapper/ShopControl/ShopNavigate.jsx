@@ -11,10 +11,10 @@ function ShopNavigate() {
                     <div className="list_button">
                         <ul className="nav" role="tablist">
                             <li>
-                                <a className="active" data-bs-toggle="tab" href="#large" role="tab" aria-controls="large" aria-selected="true"><i className="ion-grid"></i></a>
+                                <a className="active"><i className="ion-grid"></i></a>
                             </li>
                             <li>
-                                <a data-bs-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false"><i className="ion-android-menu"></i></a>
+                                <a className="active" style={{color: '#fff'}}><i className="ion-android-menu"></i></a>
                             </li>
                         </ul>
                     </div>

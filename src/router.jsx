@@ -5,19 +5,24 @@ import Home from "./page/Home/Home";
 import Shop from "./page/Shop/Shop";
 import Cart from "./page/Cart/Cart";
 import Detail from "./page/Detail/Detail";
+import Dashboard from "./page/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
     {
-        path: '/',
+        path: '',
         element: <MainLayout />,
         children: ([
             {
-                path: '/home',
+                path: '/',
                 element: <Home />
             },
             
             {
                 path: "/shop",
+                element: <Shop />
+            },
+            {
+                path: "/shop/:id",
                 element: <Shop />
             },
             
@@ -29,10 +34,19 @@ const router = createBrowserRouter([
             {
                 path: '/detail',
                 element: <Detail />
-            }
+            },
+
+            {
+                path: '/detail/:id',
+                element: <Detail />
+            },
         ])
     },
 
+    {
+        path: '/dashboard',
+        element: <Dashboard />,
+    }
 ])
 
 export default router;

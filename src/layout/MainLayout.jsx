@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import Footer from '../page/Footer/Footer'
 import Header from '../page/Header/Header'
-import { getProduct } from '../service/api/product'
 import { getDataProducts } from '../redux/slice/data_Products'
-import DetailPopUp from '../page/Detail/DetailPopUp'
+import { getProduct } from '../service/api/product'
 
 function MainLayout() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   
   const handleGetData = async () => {
@@ -19,8 +17,8 @@ function MainLayout() {
   };
 
   useEffect(() => {
-    navigate('/home');
     handleGetData();
+    console.log('render')
   }, [])
 
   return (

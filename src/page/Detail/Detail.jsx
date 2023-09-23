@@ -1,15 +1,21 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink, useLocation, useParams } from 'react-router-dom'
 import img118x118 from "../../assets/img/cart/cart10.jpg"
 import model_img from "../../assets/img/product/bigimg1.jpg"
-import { NavLink } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
 import { back } from "../../redux/slice/backHome"
-import { addProduct, deleteProduct } from '../../redux/slice/cart_Products'
-import { increaseQuantity, descreaseQuantity } from '../../redux/slice/detail_Product'
+import { addProduct } from '../../redux/slice/cart_Products'
+import { descreaseQuantity, increaseQuantity } from '../../redux/slice/detail_Product'
 
-import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
+import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded'
+import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded'
+
+import { getProduct } from '../../service/api/product'
+import { getDataProducts } from '../../redux/slice/data_Products'
+import { getDetailProduct } from '../../redux/slice/detail_Product'
+
+import { useSearchParams } from 'react-router-dom'
 
 const images = [
     {
@@ -56,9 +62,39 @@ const URL = [
 
 function Detail() {
     const [active, setActive] = useState(1);
+    const [selectDetail, setSelectDetail] = useState()
     const dispatch = useDispatch();
-    const selectDetail = useSelector(state => state.detail_Product);
+    // const params = useParams();
+    const paramsSearch = useLocation().search;
+    const params = useParams();
+    console.log(paramsSearch, params);
+
+    const select = useSelector(state => state.detail_Product);
+    console.log(select)
+    
+    const handleGetData = async () => {
+        if(paramsSearch && paramsSearch != ''){
+            const  {data} = await getProduct(paramsSearch);
+            console.log(data, 'data');
+    
+            dispatch(getDetailProduct({...data[0], qty: 1}));
+            // setSelectDetail(data)
+        }
+        else{
+            const  {data} = await getProduct(params.id);
+            console.log(data, 'data');
+            dispatch(getDetailProduct({...data[0], qty: 1}));
+            
+            setSelectDetail(data[0])
+        }
+
+    };
+    
+    useEffect(() => {
+        handleGetData()
+    }, [])
     console.log(selectDetail, 'selectDe')
+      
 
     console.log('renderrrrrr')
     return (
@@ -90,7 +126,7 @@ function Detail() {
                                 <div className="tab-content produc_thumb_conatainer">
                                     <div className="tab-pane fade show active" id="p_tab1" role="tabpanel" >
                                         <div className="modal_img">
-                                            <a><img src={model_img} alt="" /></a>
+                                            <a><img src={selectDetail && selectDetail.image} alt="" /></a>
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +136,7 @@ function Detail() {
                                         {images.map((item) => {
                                             return (
                                                 <li key={item.id}>
-                                                    <a className={active == item.id ? "active" : ''} onClick={() => setActive(item.id)} data-bs-toggle="tab" href="#p_tab1" role="tab" aria-controls="p_tab1" aria-selected="false">
+                                                    <a className={active == item.id ? "active" : ''} onClick={() => setActive(item.id)} >
                                                         <img src={item.img} alt="" />
                                                     </a>
                                                 </li>
@@ -112,10 +148,10 @@ function Detail() {
                         </div>
                         <div className="col-lg-7 col-md-6">
                             <div className="product_details">
-                                <h3>{selectDetail.name}</h3>
+                                <h3>{selectDetail && selectDetail.name}</h3>
                                 <div className="product_price">
-                                    <span className="current_price">${selectDetail.price}</span>
-                                    <span className="old_price">$28.00</span>
+                                    <span className="current_price">${selectDetail && selectDetail.price}</span>
+                                    <span className="old_price">${selectDetail && selectDetail.price + 20}</span>
                                 </div>
                                 <div className="product_ratting">
                                     <ul>
@@ -130,23 +166,19 @@ function Detail() {
                                     </ul>
                                 </div>
                                 <div className="product_description">
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis laborum, facilis in
-                                        provident pariatur, assumenda accusantium asperiores iste corrupti laboriosam quasi eius illum
-                                        minus aperiam doloribus, distinctio unde? Nam recusandae ipsam repellendus repellat eum
-                                        nisi obcaecati, doloremque mollitia iste, ab delectus, error quia, quae eligendi!
-                                    </p>
+                                    <p>{selectDetail && selectDetail.description}</p>
                                 </div>
                                 <div className="product_details_action">
                                     <h3>Available Options</h3>
                                     <div className="product_stock">
                                         <label>Quantity</label>
-                                        <RemoveCircleRoundedIcon onClick={() => dispatch(descreaseQuantity(selectDetail))} style={{ cursor: 'pointer' }} />
-                                        <span style={{ fontSize: '20px', background: '#E8EAF6', padding: '4px 7px 7px 7px' }}>{selectDetail.qty}</span>
-                                        <AddCircleRoundedIcon onClick={() => dispatch(increaseQuantity(selectDetail))} style={{ cursor: 'pointer' }} />
+                                        <RemoveCircleRoundedIcon onClick={() => dispatch(descreaseQuantity(select))} style={{ cursor: 'pointer' }} />
+                                        <span style={{ fontSize: '20px', background: '#E8EAF6', padding: '4px 7px 7px 7px' }}>{select.qty ? select.qty : 1}</span>
+                                        <AddCircleRoundedIcon onClick={() => dispatch(increaseQuantity(select))} style={{ cursor: 'pointer' }} />
                                     </div>
                                     <div className="product_action_link">
                                         <ul>
-                                            <li className="product_cart"><NavLink to={'/cart'} onClick={() => dispatch(addProduct(selectDetail))}>Add to Cart</NavLink></li>
+                                            <li className="product_cart"><NavLink to={'/cart'} onClick={() => dispatch(addProduct(select))}>Add to Cart</NavLink></li>
                                             <li className="add_links"><a><i className="ion-ios-heart-outline"></i> Add to wishlist</a></li>
                                             <li className="add_links"><a><i className="ion-loop"></i> Add to compare</a></li>
                                         </ul>
