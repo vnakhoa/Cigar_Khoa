@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import logoCigar from "../../assets/img/logo/logo.png";
 
 import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { menuName } from '../../constant/menuName';
 import { changeCategory } from '../../redux/slice/categorySoft';
 import { getDetailProduct } from '../../redux/slice/detail_Product';
-import { getProduct } from '../../service/api/product';
 import { getSearchProductData } from '../../redux/slice/searchProduct';
-import { useNavigate } from 'react-router-dom';
+import { getProduct } from '../../service/api/product';
+
+//firebase
+import { signOut } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase/firebase';
 
 const category = [
     {
@@ -67,6 +71,10 @@ const category = [
 
 
 function Header(props) {
+    //firebase 
+    const [user] = useAuthState(auth);
+    console.log(user, 'userFirebaseHOME')
+
     const [activeCategory, setActiveCategory] = useState('All')
     const [cartMain, setCartMain] = useState(false);
     const [cartCategori, setCartCategori] = useState(false);
@@ -76,10 +84,17 @@ function Header(props) {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const select = useSelector(state => state.cart_Products);
     // console.log(select, 'select')
+    let totalCost = 0;
+    let totalRate = 0;
+    select.forEach((item) => {
+        totalCost += item.price * item.qty;
+        totalRate += (item.price * item.qty * item.rate) / 100;
+    })
 
-    //COMPONENT
+    //COMPONENT child in Headder
     function MenuResponsive() {
         return (
             <nav className="mean-nav" onClick={() => setMenu(pre => !pre)}>
@@ -99,29 +114,44 @@ function Header(props) {
     }
     function CartItem() {
         return (
-            <div className="mini_cart d-block">
-                <div className="items_nunber">
-                    <span>{select.length} Items in Cart</span>
+            <div className="mini_cart d-block" style={{ borderRadius: '5px' }}>
+                <div className="items_nunber" style={{ fontWeight: '500' }}>
+                    <span>{select.length} {select.length > 1 ? "Items in Cart" : "Item in Cart"}</span>
                 </div>
-                <div className="cart_button checkout">
+                {/* <div className="cart_button checkout">
                     <NavLink to={'/cart'} onClick={() => setCartMain(false)}> Proceed to Checkout</NavLink>
+                </div> */}
+                {select.length > 0
+                    ? select.map((item) => {
+                        return (
+                            <div className="cart_item" key={item._id}>
+                                <div className="cart_img">
+                                    <NavLink
+                                        to={`/detail/${item._id}`}
+                                        onClick={() => {
+                                            dispatch(getDetailProduct(item));
+                                            setCartMain(pre => !pre)
+                                        }
+                                        }
+                                    >
+                                        <img src={item.image} alt="" />
+                                    </NavLink>
+                                </div>
+                                <div className="cart_info">
+                                    <a>{item.name}</a>
+                                    <form style={{ fontWeight: '500' }}>
+                                        <input value={item.qty} min="0" max="100" type="number" />
+                                        <span>${item.price}</span>
+                                    </form>
+                                </div>
+                            </div>
+                        )
+                    })
+                    : <div style={{ textAlign: 'center' }}>Cart is empty now!</div>
+                }
+                <div style={{ cursor: "initial", fontWeight: '600', margin: '15px 0 0 0', color: '#444444' }}>
+                    Total: ${totalCost}
                 </div>
-                {select.map((item) => {
-                    return (
-                        <div className="cart_item" key={item._id}>
-                            <div className="cart_img">
-                                <NavLink to={`/detail/${item._id}`} onClick={() => { dispatch(getDetailProduct(item)); setCartMain(pre => !pre) }}><img src={item.image} alt="" /></NavLink>
-                            </div>
-                            <div className="cart_info">
-                                <a>{item.name}</a>
-                                <form action="#">
-                                    <input value={item.qty} min="0" max="100" type="number" />
-                                    <span>${item.price}</span>
-                                </form>
-                            </div>
-                        </div>
-                    )
-                })}
 
                 <div className="cart_button view_cart">
                     <NavLink to={'/cart'} onClick={() => setCartMain(false)}> View and Edit Cart</NavLink>
@@ -196,10 +226,25 @@ function Header(props) {
     }, [keySearch])
 
 
+
     return (
         <header className="header_area">
-            <div className="header_middel">
+            <div className="header_middel pt-2">
                 <div className="container">
+                    <div className="wishlist_link mb-2" style={{ textAlign: 'right' }}>
+                        <NavLink
+                            to={'/login'}
+                            style={{ fontSize: '16px', display: 'flex', gap: '3px', alignItems: 'center', justifyContent: 'flex-end' }}
+                            onClick={() => signOut(auth)}
+                        >
+                            <div style={{ maxHeight: '25x', width: '25px', borderRadius: '50%' }}>
+                                <img src={user?.photoURL != null
+                                    ? user.photoURL
+                                    : 'https://thumbs.dreamstime.com/b/default-avatar-profile-image-vector-social-media-user-icon-potrait-182347582.jpg'} alt="" style={{ width: '100%', borderRadius: '50%' }} />
+                            </div>
+                            {user ? 'Logout' : 'Login'}
+                        </NavLink>
+                    </div>
                     <div className="row align-items-center">
                         <div className="col-lg-3 col-md-4">
                             <div className="logo">
@@ -210,23 +255,25 @@ function Header(props) {
                             <div className="search_bar" style={{ position: 'relative' }}>
                                 {/* <form> */}
                                 <input onChange={(e) => { handleKeySearch(e) }} value={keySearch} placeholder="Search entire store here..." type="text" />
-                                <ul style={{ position: 'absolute', width: '100%', zIndex: '5', background: '#f6f3f3', borderRadius: '0 0 2px 2px' }}>
+                                <ul style={{ position: 'absolute', width: '91%', zIndex: '5', background: '#f6f3f3', borderRadius: '0 0 2px 2px' }}>
                                     {
                                         suggest && suggest.map((item) => {
-                                            return <li
-                                                onClick={() => {
-                                                    setKeySearch(item.name); 
-                                                    dispatch(getSearchProductData(item.name));
-                                                    navigate(`/shop?name=${item.name}`)
-                                                    setKeySearch('')
-                                                }}
-                                                key={item._id}
-                                                className='suggest_search'
-                                                style={{ padding: '3px 3px 3px 3px', borderTop: '1px solid #e6e6e6' }}
-                                            >
-                                                <i className="ion-ios-search-strong mr-2"></i>
-                                                {item.name}
-                                            </li>
+                                            return (
+                                                <li
+                                                    onClick={() => {
+                                                        setKeySearch(item.name);
+                                                        dispatch(getSearchProductData(item.name));
+                                                        navigate(`/shop?name=${item.name}`)
+                                                        setKeySearch('')
+                                                    }}
+                                                    key={item._id}
+                                                    className='suggest_search'
+                                                    style={{ padding: '3px 3px 3px 3px', borderTop: '1px solid #e6e6e6', display: 'flex', justifyContent: 'space-between' }}
+                                                >
+                                                    <i className="ion-ios-search-strong mr-2"> {item.name}</i>
+                                                    <div style={{ maxHeight: '31px', width: '31px' }}><img src={item.image} alt="" style={{ width: '100%' }} /></div>
+                                                </li>
+                                            )
                                         })
                                     }
                                 </ul>
@@ -238,7 +285,7 @@ function Header(props) {
                         <div className="col-lg-2 col-md-3">
                             <div className="cart_area">
                                 <div className="wishlist_link">
-                                    <NavLink to={'/dashboard'} className='d-flex'>
+                                    <NavLink to={user ? '/dashboard' : '/login'} className='d-flex'>
                                         <i className="ion-ios-person-outline"></i>
                                         <p className='set_user d-flex align-items-end setup_edit'>Edit</p>
                                     </NavLink>

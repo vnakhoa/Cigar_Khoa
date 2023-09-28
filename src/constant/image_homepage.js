@@ -322,3 +322,64 @@ export const cameras = [
     },
 ];
 
+//Checkout
+export const billingDetail = [
+    {
+        id: 1,
+        name: 'First Name'
+    },
+    {
+        id: 2,
+        name: 'Last Name'
+    },
+    {
+        id: 3,
+        name: 'Company Name'
+    },
+    {
+        id: 4,
+        name: 'country',
+        children: [
+            {
+                id: 1,
+                name: 'vietnam'
+            },
+            {
+                id: 2,
+                name: 'china'
+            },
+            {
+                id: 3,
+                name: 'indonesia'
+            },
+            {
+                id: 4,
+                name: 'thailand'
+            },
+        ]
+    },
+    {
+        id: 5,
+        name: 'Street address'
+    },
+    {
+        id: 6,
+        name: ''
+    },
+    {
+        id: 7,
+        name: 'Town / City'
+    },
+    {
+        id: 8,
+        name: 'State / County'
+    },
+    {
+        id: 9,
+        name: 'Phone'
+    },
+    {
+        id: 10,
+        name: 'Email Address'
+    },
+]

@@ -10,6 +10,7 @@ import { getProduct } from '../../../../service/api/product';
 import DetailPopUp from '../../../Detail/DetailPopUp';
 import { get } from 'jquery';
 import { getSearchProductData } from '../../../../redux/slice/searchProduct';
+import Loadding from '../../../../component/Loadding';
 
 
 function ShopProduct(props) {
@@ -18,6 +19,7 @@ function ShopProduct(props) {
 
     const [onPopUp, setOnPopUp] = useState(false);
     const [data, setData] = useState([])
+    const [loadding, setLoadding] = useState(false)
     const dispatch = useDispatch();
     const navigate = useNavigate()
     // const data = useSelector(state => state.data_Products);
@@ -48,21 +50,22 @@ function ShopProduct(props) {
 
 
     const handleGetData = async () => {
-        if(dataSearch != undefined && dataSearch != '' ){
+        if (dataSearch != undefined && dataSearch != '') {
             console.log(dataSearch.toLowerCase())
-            const {data} = await getProduct();
+            const { data } = await getProduct();
             console.log(data)
             const newData = await data.filter((item) => {
                 return item.name.toLowerCase().includes(dataSearch.toLowerCase()) || dataSearch.toLowerCase().includes(item.name.toLowerCase())
             })
             console.log(newData)
             setData(newData)
-            
+
             console.log('trên')
         }
-        else{
+        else {
             console.log('dưới')
             if (paramsSearch.search[0] == '?') {
+                setLoadding(true)
                 const { data } = await getProduct({
                     _id: _id == '' || _id == null ? null : _id,
                     color: color == '' || color == null ? null : color,
@@ -73,12 +76,20 @@ function ShopProduct(props) {
                 });
                 console.log(data, 'data1111');
                 setData(data)
-    
+                setLoadding(false)
             }
             else {
-                const { data } = await getProduct(params.id);
-                console.log(data, 'data');
-                setData(data)
+                try {
+                    setLoadding(true)
+                    const { data } = await getProduct(params.id);
+                    console.log(data, 'data');
+                    setData(data)
+                    setLoadding(false)
+                }
+                catch (error) {
+                    // console.log('Faild rồi:', error.message);
+                    alert('wrong:', error.message)
+                }
             }
         }
     };
@@ -94,54 +105,60 @@ function ShopProduct(props) {
 
     return (
         <>
-            <div className="shop_tab_product">
-                <div className="tab-content" id="myTabContent">
-                    <div className="tab-pane fade show active" id="large" role="tabpanel">
-                        <div className="row">
-                            <div style={{fontWeight: '600', marginBottom: '15px'}}>Keyword search: <span style={{color: 'tomato'}}>{dataSearch}</span></div>
-                            {data && data.length> 0 ? data.map((item) => {
-                                return (
-                                    <div className="col-lg-3 col-md-4 col-sm-6" key={item._id}>
-                                        <div className="single_product">
-                                            <div className="product_thumb" onClick={() => dispatch(getDetailProduct({ ...item, qty: 1 }))}>
-                                                <NavLink to={`/detail/${item._id}`}><img src={item.image} alt="" /></NavLink>
-                                                <div className="btn_quickview">
-                                                    <NavLink onClick={() => setOnPopUp(pre => !pre)}><i className="ion-ios-eye"></i></NavLink>
+            {loadding
+                ? <Loadding />
+                :
+                <>
+                    <div className="shop_tab_product">
+                        <div className="tab-content" id="myTabContent">
+                            <div className="tab-pane fade show active" id="large" role="tabpanel">
+                                <div className="row">
+                                    <div style={{ fontWeight: '600', marginBottom: '15px' }}>Keyword search: <span style={{ color: 'tomato' }}>{dataSearch}</span></div>
+                                    {data && data.length > 0 ? data.map((item) => {
+                                        return (
+                                            <div className="col-lg-3 col-md-4 col-sm-6" key={item._id}>
+                                                <div className="single_product">
+                                                    <div className="product_thumb" onClick={() => dispatch(getDetailProduct({ ...item, qty: 1 }))}>
+                                                        <NavLink to={`/detail/${item._id}`}><img src={item.image} alt="" /></NavLink>
+                                                        <div className="btn_quickview">
+                                                            <NavLink onClick={() => setOnPopUp(pre => !pre)}><i className="ion-ios-eye"></i></NavLink>
+                                                        </div>
+                                                    </div>
+                                                    <div className="product_content">
+                                                        <div className="product_ratting">
+                                                            <ul>
+                                                                <li><a><i className="ion-star"></i></a></li>
+                                                                <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                                                <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                                                <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                                                <li><a><i className="ion-ios-star-outline"></i></a></li>
+                                                            </ul>
+                                                        </div>
+                                                        <h3 style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}><NavLink to={`/detail/${item._id}`}>{item.name}</NavLink></h3>
+                                                        <div className="product_price">
+                                                            <span className="current_price">${item.price}</span>
+                                                        </div>
+                                                        <div className="product_action">
+                                                            <ul>
+                                                                <li className="product_cart"><NavLink to={'/cart'} title="Add to Cart" onClick={() => dispatch(addProduct(item))}>Add to Cart</NavLink></li>
+                                                                <li className="add_links"><NavLink title="Add to Wishlist"><i className="ion-ios-heart-outline"></i></NavLink></li>
+                                                                <li className="add_links"><NavLink title="Add to Compare"><i className="ion-loop"></i></NavLink></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div className="product_content">
-                                                <div className="product_ratting">
-                                                    <ul>
-                                                        <li><a><i className="ion-star"></i></a></li>
-                                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
-                                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
-                                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
-                                                        <li><a><i className="ion-ios-star-outline"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                                <h3 style={{overflow: 'hidden', textOverflow: 'ellipsis'}}><NavLink to={`/detail/${item._id}`}>{item.name}</NavLink></h3>
-                                                <div className="product_price">
-                                                    <span className="current_price">${item.price}</span>
-                                                </div>
-                                                <div className="product_action">
-                                                    <ul>
-                                                        <li className="product_cart"><NavLink to={'/cart'} title="Add to Cart" onClick={() => dispatch(addProduct(item))}>Add to Cart</NavLink></li>
-                                                        <li className="add_links"><NavLink title="Add to Wishlist"><i className="ion-ios-heart-outline"></i></NavLink></li>
-                                                        <li className="add_links"><NavLink title="Add to Compare"><i className="ion-loop"></i></NavLink></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
-                            }) : <div style={{textAlign: 'center', marginTop: '25px'}}>This search haven't any products!</div>
-                            }
+                                        )
+                                    }) : <div style={{ textAlign: 'center', marginTop: '25px' }}>This search haven't any products!</div>
+                                    }
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            {onPopUp ? <DetailPopUp setOnPopUp={setOnPopUp} /> : <></>}
+                    {onPopUp ? <DetailPopUp setOnPopUp={setOnPopUp} /> : <></>}
+                </>
+            }
         </>
     )
 }

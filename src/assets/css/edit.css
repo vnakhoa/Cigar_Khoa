@@ -195,3 +195,7 @@ ul.nav {
     text-decoration: underline;
 };
 
+.activeDetail{
+    display: inline-block;
+	border: 5px solid rgb(3, 91, 179);
+}

@@ -7163,3 +7163,15 @@ a {
 	background-color: #e9ecef;
 	cursor: pointer;
 }
+
+.product_remove{
+	cursor: pointer;
+}
+.modal_img{
+	text-align: center;
+}
+.ant-form-item-row {
+    display: flex;
+    justify-content: space-between;
+    width: 135%;
+}

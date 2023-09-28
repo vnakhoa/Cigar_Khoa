@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let initialState = [];
+let initialState = localStorage.getItem('cart') ? JSON.parse(localStorage.getItem('cart')) : [];
 
 const cart_Products = createSlice({
     name: 'cartProducts',
@@ -12,25 +12,31 @@ const cart_Products = createSlice({
             console.log('findItemADD', findItem)
             if (findItem && Object.keys(findItem).length > 0) {
                 console.log('kkkkkkkkkk')
-                return state.map((item) => {
+                const currentState = state.map((item) => {
                     if (findItem._id == item._id) {
                         if (action.payload.qty)
                             return { ...item, qty: item.qty + action.payload.qty };
-                        else{
-                            return { ...item, qty: item.qty +1 };
+                        else {
+                            return { ...item, qty: item.qty + 1 };
                         }
                     }
-                    else{
+                    else {
                         return item;
                     }
                 })
+                localStorage.setItem('cart', JSON.stringify(currentState))
+                return currentState;
             }
             else {
-                if (action.payload.qty){
-                    return [...state, { ...action.payload }];
+                if (action.payload.qty) {
+                    const currentState = [...state, { ...action.payload }];
+                    localStorage.setItem('cart', JSON.stringify(currentState))
+                    return currentState;
                 }
                 else {
-                    return [...state, { ...action.payload, qty: 1 }];
+                    const currentState = [...state, { ...action.payload, qty: 1 }]
+                    localStorage.setItem('cart', JSON.stringify(currentState))
+                    return currentState;
                 }
             }
         },
@@ -40,7 +46,7 @@ const cart_Products = createSlice({
             console.log('findItemDESCREASE', findItem)
             if (findItem) {
                 if (findItem.qty && findItem.qty > 1) {
-                    return state.map((item) => {
+                    const currentState = state.map((item) => {
                         if (findItem._id == item._id) {
                             return { ...item, qty: item.qty - 1 };
                         }
@@ -48,15 +54,20 @@ const cart_Products = createSlice({
                             return { ...item };
                         }
                     })
+
+                    localStorage.setItem('cart', JSON.stringify(currentState));
+                    return currentState;
                 }
                 else if (findItem.qty && findItem.qty == 1) {
-                    return state.filter((item) => item._id != action.payload._id);
+                    const currentState = state.filter((item) => item._id != action.payload._id);
+                    localStorage.setItem('cart', JSON.stringify(currentState));
+                    return currentState;
                 }
             }
         },
 
         increaseProduct: (state, action) => {
-            return state.map((item) => {
+            const currentState = state.map((item) => {
                 if (action.payload._id == item._id) {
                     return { ...item, qty: item.qty + 1 };
                 }
@@ -64,10 +75,14 @@ const cart_Products = createSlice({
                     return { ...item };
                 }
             })
-        },  
+            localStorage.setItem('cart', JSON.stringify(currentState));
+            return currentState;
+        },
 
         deleteItemProduct: (state, action) => {
-            return state.filter((item) => item._id != action.payload._id);
+            const currentState = state.filter((item) => item._id != action.payload._id);
+            localStorage.setItem('cart', JSON.stringify(currentState));
+            return currentState;
         }
     }
 })

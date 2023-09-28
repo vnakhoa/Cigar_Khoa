@@ -1,6 +1,6 @@
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import img118x118 from '../../assets/img/cart/cart6.jpg';
 
@@ -9,19 +9,31 @@ import { NavLink } from 'react-router-dom';
 import { deleteItemProduct, descreaseProduct, increaseProduct } from '../../redux/slice/cart_Products';
 import { getDetailProduct } from '../../redux/slice/detail_Product';
 
+import { auth } from '../../firebase/firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
 function Cart() {
     const dispatch = useDispatch();
     const select = useSelector(state => state.cart_Products);
     console.log(select, 'select')
-    
-    
+
+    //firebase
+    const [user] = useAuthState(auth);
+    console.log(user)
+
     let totalCost = 0;
     let totalRate = 0;
     select.forEach((item) => {
-        totalCost+= item.price * item.qty;
-        totalRate += (item.price*item.qty*item.rate)/100;
+        totalCost += item.price * item.qty;
+        totalRate += (item.price * item.qty * item.rate) / 100;
     })
 
+    useEffect(() => {
+        window.scrollTo({
+            top: 0, // Vị trí đầu trang
+            behavior: "smooth"
+        });
+    }, [])
 
     return (
         <div className="shopping_cart_area">
@@ -43,28 +55,29 @@ function Cart() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {select?.map((item) => {
-                                                return (
-                                                    <tr key={item._id}>
-                                                        <td className="product_remove"><a><i className="fa fa-trash-o" onClick={() => dispatch(deleteItemProduct(item))}></i></a></td>
-                                                        <td className="product_thumb"><NavLink to={`/detail/${item._id}`} onClick={() => dispatch(getDetailProduct(item))}><img src={item.image} alt="" /></NavLink></td>
-                                                        <td className="product_name"><a>{item.name}</a></td>
-                                                        <td className="product-price">£{item.price}</td>
-                                                        <td className="product_quantity">
-                                                            <RemoveCircleRoundedIcon onClick={() => dispatch(descreaseProduct(item))} style={{ cursor: 'pointer' }} />
-                                                            <span style={{ fontSize: '20px', background: '#E8EAF6', padding: '4px 7px 7px 7px' }}>{item.qty}</span>
-                                                            <AddCircleRoundedIcon onClick={() => dispatch(increaseProduct(item))} style={{ cursor: 'pointer' }} />
-                                                        </td>
-                                                        <td className="product_total">£{item.price * item.qty}</td>
-                                                    </tr>
-                                                )
-                                            })}
+                                            {select?.length > 0
+                                                ? select?.map((item) => {
+                                                    return (
+                                                        <tr key={item._id}>
+                                                            <td className="product_remove"><a><i className="fa fa-trash-o" onClick={() => dispatch(deleteItemProduct(item))}></i></a></td>
+                                                            <td className="product_thumb"><NavLink to={`/detail/${item._id}`} onClick={() => dispatch(getDetailProduct(item))}><img src={item.image} alt="" /></NavLink></td>
+                                                            <td className="product_name"><a>{item.name}</a></td>
+                                                            <td className="product-price">£{item.price}</td>
+                                                            <td className="product_quantity">
+                                                                <RemoveCircleRoundedIcon onClick={() => dispatch(descreaseProduct(item))} style={{ cursor: 'pointer' }} />
+                                                                <span style={{ fontSize: '20px', background: '#E8EAF6', padding: '4px 7px 7px 7px' }}>{item.qty}</span>
+                                                                <AddCircleRoundedIcon onClick={() => dispatch(increaseProduct(item))} style={{ cursor: 'pointer' }} />
+                                                            </td>
+                                                            <td className="product_total">£{item.price * item.qty}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                                : <div style={{ color: 'red', position: "absolute", top: '70px', left: '50%', transform: 'translateX(-50%)' }}>Cart is empty now!</div>
+                                            }
                                         </tbody>
                                     </table>
                                 </div>
-                                <div className="cart_submit">
-                                    <button type="submit" onClick={(e) => e.preventDefault()}>update cart</button>
-                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -99,8 +112,11 @@ function Cart() {
                                             <p>Total</p>
                                             <p className="cart_amount">£{totalCost + totalRate}</p>
                                         </div>
-                                        <div className="checkout_btn">
-                                            <a>Proceed to Checkout</a>
+                                        <div className="checkout_btn" style={{ cursor: 'pointer' }}>
+                                            <NavLink to={user ? '/checkout' : '/login'}
+                                            >
+                                                Checkout
+                                            </NavLink>
                                         </div>
                                     </div>
                                 </div>

@@ -1,24 +1,29 @@
 
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import FormAddDashboard from './FormAddDashboard';
-import FormEditDashboard from './FormEditDashboard';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import FormAddDashboard from './FormAddDashboard';
+import FormEditDashboard from './FormEditDashboard';
 
 import { Button, Layout, theme } from 'antd';
-import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
-import { deleteProduct, getProduct, editProduct } from '../../service/api/product';
+import { useDispatch, useSelector } from 'react-redux';
 import { getDataProducts } from '../../redux/slice/data_Products';
+import { deleteProduct, getProduct } from '../../service/api/product';
+import Loadding from '../../component/Loadding';
+
+import { signOut } from 'firebase/auth';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase/firebase';
 
 const { Header, Sider, Content } = Layout;
 
 const manage = [
     {
         id: 1,
-        name: 'Add',
+        name: 'List',
     },
     {
         id: 2,
@@ -26,14 +31,18 @@ const manage = [
     },
     {
         id: 3,
-        name: 'All List',
+        name: 'Add',
     },
 ]
 
 const Dashboard = () => {
+    const [user] = useAuthState(auth);
+    console.log(user)
+
     const [collapsed, setCollapsed] = useState(false);
-    const [active, setActive] = useState('Add');
+    const [active, setActive] = useState('List');
     const [edit, setEdit] = useState('Add');
+    const [loadding, setLoadding] = useState(false)
 
     const notifyDelete = () => toast("Delete Successful!");
     const dispatch = useDispatch();
@@ -41,10 +50,12 @@ const Dashboard = () => {
     console.log(data)
 
     const handleGetData = async () => {
+        setLoadding(false)
         const { data } = await getProduct();
         console.log(data, 'data');
-
         dispatch(getDataProducts(data));
+
+        setLoadding(true)
     };
 
     const handleDeleteProduct = async (id) => {
@@ -86,6 +97,7 @@ const Dashboard = () => {
                     style={{
                         padding: 0,
                         background: colorBgContainer,
+                        position: 'relative'
                     }}
                 >
                     <Button
@@ -98,7 +110,20 @@ const Dashboard = () => {
                             height: 64,
                         }}
                     />
+
                     <span style={{ fontSize: '16px', width: 64, height: 64, fontWeight: 'bold', color: '#0b0b0b6', paddingLeft: '5px' }}>Managment (Dashboard)</span>
+                    <NavLink
+                        to={'/login'}
+                        style={{ fontSize: '16px', display: 'flex', gap: '3px', alignItems: 'center', position: 'absolute', left: '85%', top: '0' }}
+                        onClick={() => signOut(auth)}
+                    >
+                        <div style={{ maxHeight: '25x', width: '25px', borderRadius: '50%' }}>
+                            <img src={user?.photoURL != null
+                                ? user.photoURL
+                                : 'https://thumbs.dreamstime.com/b/default-avatar-profile-image-vector-social-media-user-icon-potrait-182347582.jpg'} alt="" style={{ width: '100%', borderRadius: '50%' }} />
+                        </div>
+                        {user ? 'Logout' : 'Login'}
+                    </NavLink>
                 </Header>
                 <Content
                     style={{
@@ -111,82 +136,103 @@ const Dashboard = () => {
                     {active == 'Add' ? <FormAddDashboard /> : <></>}
                     {active == 'Update' ? <FormEditDashboard edit={edit} setEdit={setEdit} /> : <></>}
                     {
-                        active == 'All List' ? <ul
-                            style={{
-                                margin: '0px 16px 20px 16px',
-                                padding: 24,
-                                minHeight: "72vh",
-                                background: colorBgContainer,
+                        active == 'List'
+                            ? <table style={{ width: '100%' }}>
+                                <thead style={{ textAlign: 'center' }}>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Control</th>
+                                    </tr>
+                                </thead>
+                                {
+                                    loadding
+                                        ? <tbody style={{ textAlign: 'center' }}>
+                                            {data && data.map((item, i) => {
+                                                return (
+                                                    <tr key={item._id}>
+                                                        <td><span>{i + 1}</span></td>
+                                                        <td> <span>{item._id}</span></td>
+                                                        <td><span style={{ width: '40%' }}>{item.name}</span></td>
+                                                        <td><span>${item.price}</span></td>
+                                                        <td>
+                                                            <span className='d-flex gap-2 justify-content-center'>
+                                                                <span className='edit_List' onClick={() => {
+                                                                    setEdit(item);
+                                                                    setActive('Update');
+                                                                    window.scrollTo({
+                                                                        top: 0, // Vị trí đầu trang
+                                                                        behavior: "smooth"
+                                                                    });
+                                                                }}>Edit</span>
 
-                            }}
-                        >
-                            <div className='mb-3' style={{ textAlign: 'center', fontWeight: '700' }}>LIST PRODUCTS</div>
-                            {
-                                data && data.map((item, i) => {
-                                    return (
-                                        <div className='d-flex justify-content-between list_product_dashboard' key={item._id}>
-                                            <span>{i + 1}</span>
-                                            <span>{item._id}</span>
-                                            <span style={{ width: '40%' }}>{item.name}</span>
-                                            <span>${item.price}</span>
-                                            <span className='d-flex gap-2'>
-                                                <span className='edit_List' onClick={() => {
-                                                    setEdit(item);
-                                                    setActive('Update');
-                                                    window.scrollTo({
-                                                        top: 0, // Vị trí đầu trang
-                                                        behavior: "smooth"
-                                                    });
-                                                    console.log(item)
-                                                }}>Edit</span>
-                                                <span className='delete_List' onClick={() => handleDeleteProduct(item._id)}>Delete</span>
-                                            </span>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </ul> : <></>
+                                                                <span className='delete_List' onClick={
+                                                                    () => handleDeleteProduct(item._id)}
+                                                                >Delete</span>
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })
+                                            }
+                                        </tbody>
+                                        : <Loadding />
+                                }
+                            </table>
+
+                            : <></>
+
                     }
 
                 </Content>
-                {active != 'All List' ?
-                    <ul
-                        style={{
-                            margin: '0px 16px 20px 16px',
-                            padding: 24,
-                            minHeight: 280,
-                            background: colorBgContainer,
-                        }}
-                    >
-                        <div className='mb-3' style={{ textAlign: 'center', fontWeight: '700' }}>LIST PRODUCTS</div>
-                        {
-                            data && data.map((item, i) => {
-                                return (
-                                    <div className='d-flex justify-content-between list_product_dashboard' key={item._id}>
-                                        <span>{i + 1}</span>
-                                        <span>{item._id}</span>
-                                        <span style={{ width: '40%' }}>{item.name}</span>
-                                        <span>${item.price}</span>
-                                        <span className='d-flex gap-2'>
-                                            <span className='edit_List' onClick={() => {
-                                                setEdit(item);
-                                                setActive('Update');
-                                                window.scrollTo({
-                                                    top: 0, // Vị trí đầu trang
-                                                    behavior: "smooth"
-                                                });
-                                            }}>Edit</span>
+                {active != 'List'
+                    ? <table>
+                        <thead style={{ textAlign: 'center' }}>
+                            <tr>
+                                <th>STT</th>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Control</th>
+                            </tr>
+                        </thead>
+                        <tbody style={{ textAlign: 'center' }}>
+                            {
+                                loadding
+                                    ? data && data.map((item, i) => {
+                                        return (
+                                            <tr key={item._id}>
+                                                <td><span>{i + 1}</span></td>
+                                                <td> <span>{item._id}</span></td>
+                                                <td><span style={{ width: '40%' }}>{item.name}</span></td>
+                                                <td><span>${item.price}</span></td>
+                                                <td>
+                                                    <span className='d-flex gap-2 justify-content-center'>
+                                                        <span className='edit_List' onClick={() => {
+                                                            setEdit(item);
+                                                            setActive('Update');
+                                                            window.scrollTo({
+                                                                top: 0, // Vị trí đầu trang
+                                                                behavior: "smooth"
+                                                            });
+                                                        }}>Edit</span>
 
-                                            <span className='delete_List' onClick={
-                                                () => handleDeleteProduct(item._id)}
-                                            >Delete</span>
-                                        </span>
-                                    </div>
-                                )
-                            })
-                        }
-                    </ul> :
-                    <></>
+                                                        <span className='delete_List' onClick={
+                                                            () => handleDeleteProduct(item._id)}
+                                                        >Delete</span>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        )
+                                    })
+                                    : <Loadding />
+                            }
+                        </tbody>
+                    </table>
+                    : <></>
+
                 }
             </Layout>
 

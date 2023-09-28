@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-let initialState = {};
+const initialState = {};
 
 const detail_Product = createSlice({
     name: 'detail_Product',
@@ -8,7 +8,7 @@ const detail_Product = createSlice({
     reducers: {
         getDetailProduct: (state, action) =>{
             console.log(action.payload)
-            return action.payload;
+            return {...action.payload};
         },
 
         increaseQuantity: (state, action) => {
