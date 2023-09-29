@@ -18,7 +18,7 @@ const FormEditDashboard = ({ edit, setEdit }) => {
 
   const dispatch = useDispatch();
   console.log(edit, 'edit')
-  
+
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
     console.log(edit, 'edit')
@@ -63,12 +63,12 @@ const FormEditDashboard = ({ edit, setEdit }) => {
 
   const handleSetEdit = (e) => {
     console.log(e.target.value, e.target.name, 'llllllllllooooooo')
-    setEdit({...edit, [e.target.name] : e.target.value})
+    setEdit({ ...edit, [e.target.name]: e.target.value })
   }
 
   const handleSetSelectEdit = (e, name) => {
-   console.log(e, name)
-   setEdit({...edit, [name]: e});
+    console.log(e, name)
+    setEdit({ ...edit, [name]: e });
   }
 
 
@@ -108,18 +108,35 @@ const FormEditDashboard = ({ edit, setEdit }) => {
                     },
                   ]}
                 >
-                  <Input
-                    style={{
-                      width: 500,
-                    }}
-                    placeholder="Please input"
-                    name={item.name}
-                    onChange={(e) => {
-                      console.log(edit, 'eddđiiđiiđiiđiiidi', e.target.name),
-                      handleSetEdit(e)
-                    }}
-                    value={edit[item.name]}
-                  />
+                  {
+                    item.name == 'description'
+                      ? <Input.TextArea
+                        style={{
+                          width: 500,
+                        }}
+                        placeholder="Please input"
+                        name={item.name}
+                        onChange={(e) => {
+                          console.log(edit, 'eddđiiđiiđiiđiiidi', e.target.name),
+                            handleSetEdit(e)
+                        }}
+                        value={edit[item.name]}
+                      />
+                      :
+                      <Input
+                        style={{
+                          width: 500,
+                        }}
+                        placeholder="Please input"
+                        name={item.name}
+                        onChange={(e) => {
+                          console.log(edit, 'eddđiiđiiđiiđiiidi', e.target.name),
+                            handleSetEdit(e)
+                        }}
+                        value={edit[item.name]}
+                      />
+                  }
+
                 </Form.Item>
               </Space>
             </Form.Item>
@@ -139,7 +156,7 @@ const FormEditDashboard = ({ edit, setEdit }) => {
                     },
                   ]}
                 >
-                  <Select onChange={(e) => handleSetSelectEdit(e, item.name)} value={edit[item.name]}  placeholder={item.label} style={{ padding: '0px 5px', width: '170px' }}>
+                  <Select onChange={(e) => handleSetSelectEdit(e, item.name)} value={edit[item.name]} placeholder={item.label} style={{ padding: '0px 5px', width: '170px' }}>
                     {
                       item.children && item.children.map((item) => {
                         return (

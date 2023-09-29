@@ -11,6 +11,7 @@ import { feildAdd } from '../../constant/feildAddDashboard';
 
 
 const { Option } = Select;
+
 const FormAddDashboard = () => {
   const notify = () => toast("Add Successful!");
   const dispatch = useDispatch();
@@ -78,12 +79,21 @@ const FormAddDashboard = () => {
                     },
                   ]}
                 >
-                  <Input
-                    style={{
-                      width: 500,
-                    }}
-                    placeholder="Please input"
-                  />
+                  {
+                    item.name == 'description'
+                      ? <Input.TextArea
+                        style={{
+                          width: 500,
+                        }}
+                        placeholder="Please input" />
+                      :
+                      <Input
+                        style={{
+                          width: 500,
+                        }}
+                        placeholder="Please input"
+                      />
+                  }
                 </Form.Item>
               </Space>
             </Form.Item>

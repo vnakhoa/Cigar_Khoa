@@ -12,14 +12,16 @@ import { getDetailProduct } from '../../redux/slice/detail_Product';
 import { auth } from '../../firebase/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
+
 function Cart() {
+    //firebase
+    const [user] = useAuthState(auth);
+    console.log(user)
+
     const dispatch = useDispatch();
     const select = useSelector(state => state.cart_Products);
     console.log(select, 'select')
 
-    //firebase
-    const [user] = useAuthState(auth);
-    console.log(user)
 
     let totalCost = 0;
     let totalRate = 0;
@@ -27,6 +29,7 @@ function Cart() {
         totalCost += item.price * item.qty;
         totalRate += (item.price * item.qty * item.rate) / 100;
     })
+
 
     useEffect(() => {
         window.scrollTo({
@@ -72,7 +75,11 @@ function Cart() {
                                                         </tr>
                                                     )
                                                 })
-                                                : <div style={{ color: 'red', position: "absolute", top: '70px', left: '50%', transform: 'translateX(-50%)' }}>Cart is empty now!</div>
+                                                : <div
+                                                    style={{ color: '#2971f5', fontWeight: '500', position: "absolute", top: '60px', left: '50%', transform: 'translateX(-50%)' }}
+                                                >
+                                                    Cart is empty now!
+                                                </div>
                                             }
                                         </tbody>
                                     </table>
@@ -104,9 +111,8 @@ function Cart() {
                                         </div>
                                         <div className="cart_subtotal ">
                                             <p>Shipping</p>
-                                            <p className="cart_amount"><span>Flat Rate:</span> £{totalRate}</p>
+                                            <p className="cart_amount"> £{totalRate}</p>
                                         </div>
-                                        <a>Calculate shipping</a>
 
                                         <div className="cart_subtotal">
                                             <p>Total</p>

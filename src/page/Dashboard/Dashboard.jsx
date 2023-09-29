@@ -137,19 +137,20 @@ const Dashboard = () => {
                     {active == 'Update' ? <FormEditDashboard edit={edit} setEdit={setEdit} /> : <></>}
                     {
                         active == 'List'
-                            ? <table style={{ width: '100%' }}>
-                                <thead style={{ textAlign: 'center' }}>
-                                    <tr>
-                                        <th>STT</th>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                        <th>Price</th>
-                                        <th>Control</th>
-                                    </tr>
-                                </thead>
-                                {
-                                    loadding
-                                        ? <tbody style={{ textAlign: 'center' }}>
+                            ? (
+                                loadding
+                                    ? <table>
+                                        <thead >
+                                            <tr>
+                                                <th>STT</th>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Price</th>
+                                                <th>Control</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody style={{ textAlign: 'center' }}>
                                             {data && data.map((item, i) => {
                                                 return (
                                                     <tr key={item._id}>
@@ -178,11 +179,13 @@ const Dashboard = () => {
                                             })
                                             }
                                         </tbody>
-                                        : <Loadding />
-                                }
-                            </table>
-
+                                    </table>
+                                    : <Loadding />
+                            )
                             : <></>
+
+
+
 
                     }
 
@@ -209,7 +212,7 @@ const Dashboard = () => {
                                                 <td><span style={{ width: '40%' }}>{item.name}</span></td>
                                                 <td><span>${item.price}</span></td>
                                                 <td>
-                                                    <span className='d-flex gap-2 justify-content-center'>
+                                                    <span className='d-flex gap-3 justify-content-center'>
                                                         <span className='edit_List' onClick={() => {
                                                             setEdit(item);
                                                             setActive('Update');
