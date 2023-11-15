@@ -7188,6 +7188,11 @@ a {
 	text-align: center;
 }
 
+.modal_img a img {
+	width: 280px;
+	height: 280px;
+}
+
 .ant-form-item-row {
 	display: flex;
 	justify-content: space-between;
