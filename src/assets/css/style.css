@@ -94,7 +94,7 @@
 
 	.product_thumb {
 		margin-right: 10px;
-		min-height: 158px;
+		min-height: 180px;
 	}
 }
 
@@ -109,7 +109,7 @@
 
 	.product_thumb {
 		margin-right: 10px;
-		min-height: 136px;
+		min-height: 152px;
 	}
 
 }
@@ -141,7 +141,7 @@
 @media (max-width: 992px) {
 	.product_thumb {
 		margin-right: 10px;
-		min-height: 136px;
+		min-height: 165px;
 	}
 }
 
@@ -1744,6 +1744,7 @@ a {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	flex-wrap: wrap;
 	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
@@ -4640,7 +4641,7 @@ a {
 }
 
 .table_desc table thead tr th.product_thumb {
-	min-width: 212px;
+	min-width: 165px;
 }
 
 .table_desc table thead tr th.product_quantity {
@@ -6847,6 +6848,11 @@ a {
 	.coming_soon_title {
 		margin-bottom: 36px;
 	}
+
+	.countdown_product_thumb img {
+		margin: 0 auto;
+	}
+
 }
 
 .coming_soon_title h2 {
@@ -6907,6 +6913,15 @@ a {
 	.coming_soon_timing .single_countdown {
 		margin-right: 20px;
 	}
+
+	.product_content {
+		border-top: 1px solid gray;
+		padding-top: 10px;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
 }
 
 .coming_soon_timing .single_countdown:last-child {

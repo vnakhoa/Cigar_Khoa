@@ -1,8 +1,7 @@
 
-
 import React from 'react'
 
-function ShopNavigate() {
+function ShopNavigate({ sortProduct, setSortProduct }) {
     return (
         <div className="row">
             <div className="col-12">
@@ -14,7 +13,7 @@ function ShopNavigate() {
                                 <a className="active"><i className="ion-grid"></i></a>
                             </li>
                             <li>
-                                <a className="active" style={{color: '#fff'}}><i className="ion-android-menu"></i></a>
+                                <a className="active" style={{ color: '#fff' }}><i className="ion-android-menu"></i></a>
                             </li>
                         </ul>
                     </div>
@@ -31,16 +30,12 @@ function ShopNavigate() {
                     <div className="select_option">
                         <form action="#">
                             <label>Sort By</label>
-                            <select name="orderby" id="short1">
-                                <option selected value="1">Position</option>
-                                <option value="1">Price: Lowest</option>
-                                <option value="1">Price: Highest</option>
-                                <option value="1">Product Name:Z</option>
-                                <option value="1">Sort by price:low</option>
-                                <option value="1">Product Name: Z</option>
-                                <option value="1">In stock</option>
-                                <option value="1">Product Name: A</option>
-                                <option value="1">In stock</option>
+                            <select name="orderby" id="short1" onChange={(e) => setSortProduct(e.target.value)}>
+                                <option selected value="normal">Normal</option>
+                                <option value="lowest">Price: Lowest</option>
+                                <option value="highest">Price: Highest</option>
+                                <option value="A-Z">Product Name: A-Z</option>
+                                <option value="Z-A">Product Name: Z-A</option>
                             </select>
                         </form>
                     </div>

@@ -27,7 +27,7 @@ function Cart() {
     let totalRate = 0;
     select.forEach((item) => {
         totalCost += item.price * item.qty;
-        totalRate += (item.price * item.qty * item.rate) / 100;
+        totalRate += ((item.price * item.qty * item.rate) / 100);
     })
 
 

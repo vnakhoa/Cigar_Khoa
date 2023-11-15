@@ -1,20 +1,8 @@
 
+import React from 'react';
+import { NavLink } from 'react-router-dom';
 
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { NavLink } from 'react-router-dom'
-import { back } from '../../../redux/slice/backHome';
-
-function Breadcrumbs() {
-    const dispatch = useDispatch();
-
-    function handleBackHome(e) {
-        console.log('kkk', dispatch);
-        // e.preventDefault();
-
-        dispatch(back(''));
-
-    }
+function BreadcrumbsBackHome({ name }) {
 
     return (
         <div className="breadcrumbs_area">
@@ -23,11 +11,11 @@ function Breadcrumbs() {
                     <div className="row">
                         <div className="col-12">
                             <div className="breadcrumb_content">
-                                <h3>shop</h3>
+                                <h3>{name}</h3>
                                 <ul>
-                                    <li><NavLink to={'/'} onClick={handleBackHome}>Home</NavLink></li>
+                                    <li><NavLink to={'/'}>Home</NavLink></li>
                                     <li><i className="fa fa-angle-right"></i></li>
-                                    <li>shop</li>
+                                    <li>{name}</li>
                                 </ul>
                             </div>
                         </div>
@@ -38,4 +26,8 @@ function Breadcrumbs() {
     )
 }
 
-export default Breadcrumbs
+
+
+BreadcrumbsBackHome.propTypes = {}
+
+export default BreadcrumbsBackHome

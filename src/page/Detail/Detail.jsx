@@ -71,7 +71,7 @@ function Detail() {
     const select = useSelector(state => state.detail_Product);
     console.log(select, 'select useSeletor')
 
-    const newImagesArr = [{id: 0, img: select.image}, ...imagesArr];
+    const newImagesArr = [{ id: 0, img: select.image }, ...imagesArr];
     console.log(imagesArr)
 
     const handleGetData = async () => {
@@ -138,10 +138,10 @@ function Detail() {
                     <div className="row">
                         <div className="col-lg-5 col-md-6">
                             <div className="product_gallery">
-                                <div className="tab-content produc_thumb_conatainer" style={{minHeight: '250px'}}>
+                                <div className="tab-content produc_thumb_conatainer" style={{ minHeight: '250px' }}>
                                     <div className="tab-pane fade show active" id="p_tab1" role="tabpanel" >
                                         <div className="modal_img">
-                                            <a><img src={imageShow} alt="" style={{width: '100%', height: '250px'}} /></a>
+                                            <a><img src={imageShow} alt="" /></a>
                                         </div>
                                     </div>
                                 </div>
@@ -151,12 +151,13 @@ function Detail() {
                                         return (
                                             <li key={item.id}>
                                                 <a
-                                                    onClick={() => {setActive(item.id) ; setImageShow(item.img)}}
+                                                    onClick={() => { setActive(item.id); setImageShow(item.img) }}
                                                     style={active == item.id ?
-                                                        { display: 'inline-block', cursor: "pointer", border: '1px solid rgb(128,134,139)' } :
+                                                        { display: 'inline-block', cursor: "pointer", border: '1px solid rgb(128,134,139)' }
+                                                        :
                                                         { display: 'inline-block', cursor: "pointer" }}
                                                 >
-                                                    <img src={item.img} alt="" style={{height: '118px'}}/>
+                                                    <img src={item.img} alt="" style={{ height: '118px' }} />
                                                 </a>
                                             </li>
                                         )

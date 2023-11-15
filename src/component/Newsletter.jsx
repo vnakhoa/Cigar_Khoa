@@ -1,25 +1,29 @@
 
 import React from 'react'
+import Contact from './Contact'
 
 function Newsletter() {
 
     const infoArray = [
         {
+            id: 1,
             icon: "pe-7s-call",
             contact: "(999) 123456789",
             detail: 'Free support line!',
         },
         {
+            id: 2,
             icon: "pe-7s-mail",
             contact: "abc@mail.com",
             detail: 'Orders Support!',
         },
         {
+            id: 3,
             icon: "pe-7s-timer",
             contact: 'Mon - Fri / 8:00 - 18:00',
             detail: 'Working Days/Hours!',
         },
-    ] 
+    ]
 
     return (
         <div className="shipping_area shipping_contact ">
@@ -28,17 +32,7 @@ function Newsletter() {
                     <div className="row">
                         {infoArray.map(item => {
                             return (
-                                <div className="col-lg-4 col-md-4" key={item.contact}>
-                                    <div className="single_shipping">
-                                        <div className="shipping_icone">
-                                            <span className={item.icon}></span>
-                                        </div>
-                                        <div className="shipping_content">
-                                            <h3>{item.contact}</h3>
-                                            <p>{item.detail}</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                <Contact icon={item.icon} contact={item.contact} detail={item.detail} key={item.id} />
                             )
                         })}
                     </div>
