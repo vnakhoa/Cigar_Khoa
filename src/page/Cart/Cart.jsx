@@ -2,15 +2,13 @@ import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import RemoveCircleRoundedIcon from '@mui/icons-material/RemoveCircleRounded';
 import React, { useEffect } from 'react';
 
-import img118x118 from '../../assets/img/cart/cart6.jpg';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { deleteItemProduct, descreaseProduct, increaseProduct } from '../../redux/slice/cart_Products';
 import { getDetailProduct } from '../../redux/slice/detail_Product';
 
-import { auth } from '../../firebase/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../../firebase/firebase';
 
 
 function Cart() {
@@ -20,7 +18,6 @@ function Cart() {
 
     const dispatch = useDispatch();
     const select = useSelector(state => state.cart_Products);
-    console.log(select, 'select')
 
 
     let totalCost = 0;

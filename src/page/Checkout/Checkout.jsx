@@ -1,9 +1,8 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { billingDetail } from '../../constant/image_homepage'
-import Loadding from '../../component/Loadding'
+import { NavLink } from 'react-router-dom'
 import paypal from "../../assets/img/visha/papyel.png"
+import { billingDetail } from '../../constant/image_homepage'
 
 function Checkout() {
 
