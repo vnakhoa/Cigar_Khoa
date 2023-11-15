@@ -16,7 +16,9 @@ function CardProduct({ item, image, price, name, size }) {
                     className="product_thumb"
                     style={size == 'large'
                         ? { margin: '0 auto', textAlign: 'center', minHeight: '280px', minWidth: '280px' }
-                        : { margin: '0 auto', textAlign: 'center', minHeight: '255px' }
+                        : size == 'small'
+                            ? { margin: '0 auto', textAlign: 'center', minHeight: '165px', width: '155px' }
+                            : { margin: '0 auto', textAlign: 'center', minHeight: '255px' }
                     }
                 >
                     <NavLink to={`/detail/${item._id}`}><img src={image} alt="" /></NavLink>

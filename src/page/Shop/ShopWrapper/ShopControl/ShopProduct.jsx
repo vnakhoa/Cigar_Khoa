@@ -107,6 +107,7 @@ function ShopProduct(props) {
                                         return (
                                             <div className="col-lg-4 col-md-4 col-sm-6" key={item._id}>
                                                 <CardProduct
+                                                    size={'small'}
                                                     item={item}
                                                     image={item.image}
                                                     price={item.price}
